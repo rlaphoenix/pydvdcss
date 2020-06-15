@@ -19,7 +19,11 @@
     # choose device
     dev = "/dev/sr0"
 
-    # with handles disposing once you leave the call
+    # create instance
+    dvdcss = PyDvdCss()
+
+    # use `with` to auto dispose once you leave the tree
+    # of course you can also just do `dvdcss = PyDvdCss()`
     with PyDvdCss() as dvdcss:
 
       # open device
@@ -30,10 +34,17 @@
         print("The DVD is scrambled!")
       
       # read volume id from sector 16
-      dvdcss.seek(16)  # seek to sector 16
-      dvdcss.read(1)   # read only one sector
-      volume_label = dvdcss.buffer[40:72].strip().decode()
+      dvdcss.seek(16)       # seek to sector 16
+      dvdcss.read(1)        # read only one sector
+      data = dvdcss.buffer  # access the latest read data
+      volume_label = data[40:72].strip().decode()
       print(f"{dev}: {volume_label}")
+      # >> eg. `'/dev/sr0: THE_IT_CROWD_DISC_1'`
+    
+    # make sure you dispose when your done if you didn't
+    # use `with`, otherwise stuff will get stuck in memory.
+    # usage of `with` on pydvdcss automatically handles disposing.
+    # dvdcss.dispose()
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
