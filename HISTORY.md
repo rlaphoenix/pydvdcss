@@ -2,9 +2,15 @@
 
 ## master
 
+- N/A
+
+## 1.0.2
+
 **Improvements**
 
-- Clear the buffer when disposing with `__exit__`.
+- Implement `dispose()` function to deal with disposing
+- Have `__exit__` call `dispose()` so that `with` calls dispose properly
+- Clear the buffer in `dispose()`
 
 ## 1.0.1
 
