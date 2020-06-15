@@ -39,7 +39,7 @@ Python wrapper for VideoLAN's libdvdcss.
     dev = "/dev/sr0"
 
     # with handles disposing once you leave the call
-    with PyDvdCss as dvdcss:
+    with PyDvdCss() as dvdcss:
 
       # open device
       dvdcss.open(dev)

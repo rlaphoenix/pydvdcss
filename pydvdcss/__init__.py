@@ -1,4 +1,4 @@
-import ctypes
+import ctypes, ctypes.util
 
 
 class PyDvdCss:
