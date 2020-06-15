@@ -81,6 +81,8 @@ class PyDvdCss:
         return self
     
     def __exit__(self, type, value, traceback):
+        self.buffer = None
+        self.buffer_len = 0
         if self.handle:
             self.close()
 
