@@ -123,6 +123,80 @@ or
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
+# Functions
+
+## PyDvdCss.open(psz_target=[string])
+
+Open a DVD device or directory and return a dvdcss instance.
+
+Initialize the libdvdcss library and open the requested DVD device or directory.
+libdvdcss checks whether ioctls can be performed on the disc, and when possible,
+the disc key is retrieved.
+
+open() returns a handle to be used for all subsequent libdvdcss calls. If an
+error occurred, NULL is returned.
+
+- **psz_target**: target name, e.g. "/dev/hdc" or "E:".
+
+## PyDvdCss.close()
+
+Close the DVD and clean up the library.
+
+Close the DVD device and free all the memory allocated by libdvdcss.
+On return, the dvdcss_t handle is invalidated and may not be used again.
+
+## PyDvdCss.seek(i_blocks=[int], i_flags=[int;NOFLAGS])
+
+Seek in the disc and change the current key if requested.
+
+This function seeks to the requested position, in logical blocks.
+Returns the new position in blocks, or a negative value in case an error
+happened.
+
+Tips:
+
+> Use SEEK_MPEG flag when seeking throughout VOB data sectors. It isn't needed
+  on the first sector.
+
+> Use SEEK_KEY flag the first time you enter a TITLE. You *can* always call it
+  in VOB data sectors, however it will be unnecessary and cause slowdowns.
+
+- **i_blocks**: absolute block offset to seek to.
+- **i_flags**: NOFLAGS by default, or you can specify SEEK_KEY or SEEK_MPEG flags.
+
+## PyDvdCss.read(i_blocks=[int], i_flags=[int;NOFLAGS])
+
+Read from the disc and decrypt data if requested.
+
+This function reads i_blocks logical blocks from the DVD.
+Returns the amount of blocks read, or a negative value in case an error happened.
+
+Tips:
+
+> Get the read contents from the buffer variable of PyDvdCss instance.
+
+- **i_blocks**: absolute block offset to seek to.
+- **i_flags**: NOFLAGS by default, or you can specify the READ_DECRYPT flag.
+
+## PyDvdCss.error()
+
+Return a string containing the latest error that occurred in the given libdvdcss
+instance.
+
+This function returns a constant string containing the latest error that occurred
+in libdvdcss. It can be used to format error messages at your convenience in your
+application.
+
+Returns a null-terminated string containing the latest error message.
+
+## PyDvdCss.is_scrambled()
+
+Check if the DVD is scrambled.
+
+Returns True if it's scrambled.
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
 ---
 
 <p>&nbsp;</p><p>&nbsp;</p>

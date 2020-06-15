@@ -140,7 +140,8 @@ class PyDvdCss:
         This function reads i_blocks logical blocks from the DVD.
         Returns the amount of blocks read, or a negative value in case an error happened.
 
-        - Get the read contents from instance.buffer
+        Tips:
+        - Get the read contents from the buffer variable of PyDvdCss instance.
         """
         if self.buffer_len != i_blocks:
             # the current ctypes buffer won't fit the data, resize it
@@ -159,6 +160,7 @@ class PyDvdCss:
         This function returns a constant string containing the latest error that occurred
         in libdvdcss. It can be used to format error messages at your convenience in your
         application.
+        
         Returns a null-terminated string containing the latest error message.
         """
         return self._error(self.handle)
