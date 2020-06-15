@@ -3,10 +3,12 @@
 Python wrapper for VideoLAN's libdvdcss.
 
 <p align="center">
-<a href="https://python.org"><img src="https://img.shields.io/badge/python-3.6%2B-informational?style=flat-square" /></a>
-<a href="https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/rlaPHOENiX/pydvdcss?style=flat-square" /></a>
-<a href="https://github.com/rlaPHOENiX/pydvdcss/issues"><img alt="issues" src="https://img.shields.io/github/issues/rlaPHOENiX/pydvdcss?style=flat-square" /></a>
-<a href="http://makeapullrequest.com"><img alt="pr's welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square" /></a>
+<a href="https://python.org"><img src="https://img.shields.io/badge/python-3.6%2B-informational" /></a>
+<a href="https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/github/license/rlaPHOENiX/pydvdcss" /></a>
+<a href="https://github.com/rlaPHOENiX/pydvdcss/issues"><img alt="issues" src="https://img.shields.io/github/issues/rlaPHOENiX/pydvdcss" /></a>
+<a href="https://github.com/rlaPHOENiX/pydvdcss/actions?query=workflow%3A%22Python+version+tests%22"><img alt="Build status" src="https://github.com/rlaPHOENiX/pydvdcss/workflows/Python%20version%20tests/badge.svg" /></a>
+![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Python%20version%20tests/badge.svg)
+<a href="http://makeapullrequest.com"><img alt="pr's welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" /></a>
 <br>
 <a href="https://ko-fi.com/W7W01KX2G"><img alt="support me" src="https://www.ko-fi.com/img/githubbutton_sm.svg" /></a>
 </p>
