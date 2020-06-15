@@ -1,4 +1,10 @@
-# pydvdcss
+<span align="center">
+
+![Banner](banner.png?raw=true)
+
+</span>
+
+---
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
@@ -29,11 +35,32 @@
       volume_label = dvdcss.buffer[40:72].strip().decode()
       print(f"{dev}: {volume_label}")
 
+<p>&nbsp;</p><p>&nbsp;</p>
+
 ---
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
 `libdvdcss` is a simple library designed for accessing DVDs like a block device without having to bother about the decryption. `pydvdcss` exposes this library as a class taking care of the rest.
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
+<span align="center">
+
+[![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
+[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
+[![Python versions](https://img.shields.io/pypi/pyversions/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
+[![PyPI status](https://img.shields.io/pypi/status/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
+[![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/issues)
+![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Version%20tests/badge.svg?branch=master)
+
+[![Support me on ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01KX2G)
+
+</span>
+
+<p>&nbsp;</p><p>&nbsp;</p>
 
 ## Features
 
@@ -55,24 +82,7 @@ Unlike most similar projects, `libdvdcss` does not require the region of your dr
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
-<span align="center">
-
-[![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
-[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
-[![PyPI version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
-[![Python versions](https://img.shields.io/pypi/pyversions/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
-[![PyPI status](https://img.shields.io/pypi/status/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
-[![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/pydvdcss)](https://GitHub.com/rlaPHOENiX/pydvdcss/graphs/contributors)
-[![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/pydvdcss)](https://GitHub.com/rlaPHOENiX/pydvdcss/issues)
-![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Version%20tests/badge.svg?branch=master)
-
-[![Support me on ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W01KX2G)
-
-</span>
-
-<p>&nbsp;</p><p>&nbsp;</p>
-
-## Installation
+# Installation
 
     python -m pip install --user pydvdcss
 
@@ -84,7 +94,9 @@ or
 
 *Note: with the second method you will need to handle updating yourself by re-cloning and installing it again.*
 
-## To-do
+<p>&nbsp;</p><p>&nbsp;</p>
+
+# To-do
 
 - [X] Implement dvdcss_open
 - [X] Implement dvdcss_close
@@ -97,3 +109,19 @@ or
 - [ ] Add handlers for failed find_library or cdll calls
 - [ ] Add function to set DVDCSS_VERBOSE
 - [ ] Add function to set DVDCSS_METHOD
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
+---
+
+<p>&nbsp;</p><p>&nbsp;</p>
+
+<span align="center">
+
+## [PHOENiX](https://github.com/rlaPHOENiX)
+
+## [LICENSE (GPLv3)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
+
+## [CONTRIBUTORS](https://github.com/rlaPHOENiX/pydvdcss/graphs/contributors)
+
+</span>
