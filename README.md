@@ -118,6 +118,9 @@ or
 - [X] Implement `__enter__` and `__exit__` for proper disposing
 - [X] Add handlers for failed find_library calls
 - [X] Add instructions for installing libdvdcss
+- [X] Add and test support for Windows
+- [X] Add and test support for Mac OS
+- [X] Add and test support for Linux
 - [ ] Implement dvdcss_readv
 - [ ] Add handlers for failed cdll calls
 - [ ] Add function to set DVDCSS_VERBOSE
