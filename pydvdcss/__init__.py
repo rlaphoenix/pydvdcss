@@ -1,5 +1,6 @@
 import ctypes, ctypes.util
 import platform
+import os
 
 
 class PyDvdCss:
@@ -129,6 +130,9 @@ class PyDvdCss:
         self.buffer_len = 0
         if self.handle:
             self.close()
+        # reset verbosity and cracking mode environment variables
+        self.set_verbosity(None)
+        self.set_cracking_mode(None)
 
     def open(self, psz_target):
         """
@@ -214,3 +218,49 @@ class PyDvdCss:
         Check if the DVD is scrambled.
         """
         return self._is_scrambled(self.handle) == 1
+    
+    def set_verbosity(self, verbosity=0):
+        """
+        Set libdvdcss's verbosity (DVDCSS_VERBOSE environment variable).
+
+        Available options are int 0..2
+          None: Unset/Remove/Reset the cracking mode.
+          0:    no error messages, no debug messages (this is the default)
+          1:    only error messages
+          2:    error and debug messages
+        
+        Returns the now current value of DVDCSS_VERBOSE, expected value should be
+        the same as the verbosity int provided.
+        """
+        if verbosity is None:
+            os.unsetenv("DVDCSS_VERBOSE")
+            return None
+        os.environ["DVDCSS_VERBOSE"] = str(verbosity)
+        return os.environ["DVDCSS_VERBOSE"]
+    
+    def set_cracking_mode(self, mode="key"):
+        """
+        Set libdvdcss's cracking mode (DVDCSS_METHOD environment variable).
+
+        Available options:
+          None:    Unset/Remove/Reset the cracking mode.
+          'title': By default the decrypted title key is guessed from the encrypted
+                   sectors of the stream. Thus it should work with a file as well as
+                   the DVD device. But decrypting a title key may take too much time
+                   or even fail. With the title method, the key is only checked at
+                   the beginning of each title, so it will not work if the key
+                   changes in the middle of a title.
+          'disc':  The disc key is cracked first. Afterwards all title keys can be
+                   decrypted instantly, which allows checking them often.
+          'key':   The same as the "disc" method if you do not have a file with player
+                   keys at compile time. If you do, disc key decryption will be faster.
+                   This is the default method also employed by libcss.
+        
+        Returns the now current value of DVDCSS_METHOD, expected value should be
+        the same as the mode string provided.
+        """
+        if mode is None:
+            os.unsetenv("DVDCSS_METHOD")
+            return None
+        os.environ["DVDCSS_METHOD"] = mode
+        return os.environ["DVDCSS_METHOD"]

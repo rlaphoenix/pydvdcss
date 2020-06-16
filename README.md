@@ -32,7 +32,7 @@
       # check if dvd is scrambled
       if dvdcss.is_scrambled():
         print("The DVD is scrambled!")
-      
+
       # read volume id from sector 16
       dvdcss.seek(16)       # seek to sector 16
       dvdcss.read(1)        # read only one sector
@@ -40,7 +40,7 @@
       volume_label = data[40:72].strip().decode()
       print(f"{dev}: {volume_label}")
       # >> eg. `'/dev/sr0: THE_IT_CROWD_DISC_1'`
-    
+
     # make sure you dispose when your done if you didn't
     # use `with`, otherwise stuff will get stuck in memory.
     # usage of `with` on pydvdcss automatically handles disposing.
@@ -103,28 +103,28 @@ or
     cd pydvdcss
     python -m pip install --user .
 
-*Note: with the second method you will need to handle updating yourself by re-cloning and installing it again.*
+_Note: with the second method you will need to handle updating yourself by re-cloning and installing it again._
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
 # To-do
 
-- [X] Implement dvdcss_open
-- [X] Implement dvdcss_close
-- [X] Implement dvdcss_seek
-- [X] Implement dvdcss_read
-- [X] Implement dvdcss_error
-- [X] Implement dvdcss_is_scrambled
-- [X] Implement `__enter__` and `__exit__` for proper disposing
-- [X] Add handlers for failed find_library calls
-- [X] Add instructions for installing libdvdcss
-- [X] Add and test support for Windows
-- [X] Add and test support for Mac OS
-- [X] Add and test support for Linux
-- [ ] Implement dvdcss_readv
-- [ ] Add handlers for failed cdll calls
-- [ ] Add function to set DVDCSS_VERBOSE
-- [ ] Add function to set DVDCSS_METHOD
+- [x] Implement dvdcss_open
+- [x] Implement dvdcss_close
+- [x] Implement dvdcss_seek
+- [x] Implement dvdcss_read
+- [x] Implement dvdcss_error
+- [x] Implement dvdcss_is_scrambled
+- [x] Implement `__enter__` and `__exit__` for proper disposing
+- [x] Add handlers for failed find_library calls
+- [x] Add instructions for installing libdvdcss
+- [x] Add and test support for Windows
+- [x] Add and test support for Mac OS
+- [x] Add and test support for Linux
+- [x] Add function to set DVDCSS_VERBOSE
+- [x] Add function to set DVDCSS_METHOD
+- [ ] Implement dvdcss_readv, not sure how this would be used or implemented
+- [ ] Handle errors for failed cdll calls if any?
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
@@ -161,10 +161,10 @@ happened.
 Tips:
 
 > Use SEEK_MPEG flag when seeking throughout VOB data sectors. It isn't needed
-  on the first sector.
+> on the first sector.
 
-> Use SEEK_KEY flag the first time you enter a TITLE. You *can* always call it
-  in VOB data sectors, however it will be unnecessary and cause slowdowns.
+> Use SEEK_KEY flag the first time you enter a TITLE. You _can_ always call it
+> in VOB data sectors, however it will be unnecessary and cause slowdowns.
 
 - **i_blocks**: absolute block offset to seek to.
 - **i_flags**: NOFLAGS by default, or you can specify SEEK_KEY or SEEK_MPEG flags.

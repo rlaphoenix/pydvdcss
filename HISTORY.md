@@ -4,6 +4,13 @@
 
 N/A
 
+## 1.0.6
+
+**Improvements**
+
+- Add functions to set DVDCSS_VERBOSE and DVDCSS_METHOD environment variables.
+- Reset DVDCSS_VERBOSE and DVDCSS_METHOD on dispose.
+
 ## 1.0.5
 
 **Bugfixes**
