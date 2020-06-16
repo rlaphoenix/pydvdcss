@@ -94,7 +94,7 @@ class PyDvdCss:
                 "If it's not found, check it's User Repository or compile it yourself.",
                 "If you compile it yourself, make sure it's somewhere in PATH for pydvdcss to find it.",
                 "pydvdcss uses ctypes.util.find_library to search for the library.",
-                "It uses `/sbin/ldconfig`, `gcc`, `objdump` and `ld` to try find the library.",,
+                "It uses `/sbin/ldconfig`, `gcc`, `objdump` and `ld` to try find the library.",
                 "Good luck!"
             ])
         raise EnvironmentError(err)
