@@ -4,6 +4,12 @@
 
 N/A
 
+## 1.0.5
+
+**Bugfixes**
+
+- When using `open()` make sure there's no handle in use, if there is, dispose it first. This ensures handle isnt stuck in memory purgatory.
+
 ## 1.0.4
 
 **Improvements**
