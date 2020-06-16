@@ -19,9 +19,6 @@
     # choose device
     dev = "/dev/sr0"
 
-    # create instance
-    dvdcss = PyDvdCss()
-
     # use `with` to auto dispose once you leave the tree
     # of course you can also just do `dvdcss = PyDvdCss()`
     with PyDvdCss() as dvdcss:
