@@ -1,4 +1,5 @@
 import ctypes, ctypes.util
+import platform
 
 
 class PyDvdCss:
@@ -57,7 +58,47 @@ class PyDvdCss:
     }
 
     # Implement Functions from libdvdcss
-    LIB = ctypes.CDLL(ctypes.util.find_library("dvdcss"))
+    # import libdvdcss if possibly via ctypes CDLL
+    LIB = None
+    for crib in [
+        "dvdcss",      # common linux
+        "dvdcss2",     # possible common linux
+        "libdvdcss",   # common windows
+        "libdvdcss2",  # also common windows
+        "libdvdcss-2"  # also common windows, alienx/libdvdcss-dll
+    ]:
+        LIB = ctypes.util.find_library(crib)
+        if LIB:
+            break
+    if not LIB:
+        err = "PyDvdCss: Unable to locate libdvdcss library, please install it.\n"
+        if platform.system() == "Windows":
+            dll = f"https://github.com/allienx/libdvdcss-dll/raw/master/1.4.2/{platform.architecture()[0].replace('b', '-b')}/libdvdcss-2.dll"
+            err += "\n".join([
+                "On Windows, the installation process is a bit annoying, so I calculated it all for you:",
+                f"Download the following file: `{dll}``",
+                f"Place the file in: `C:/Windows/{'SysWOW64' if platform.machine().endswith('64') else 'System32'}``",
+                f"Done!"
+            ])
+        elif platform.system() == "Darwin":
+            err += "\n".join([
+                "On Mac, the installation process is easiest when using `brew`.",
+                "If you don't have brew installed, follow the instructions at `https://brew.sh`",
+                "Once installed, open terminal and type: `brew install libdvdcss`",
+                "Done!"
+            ])
+        elif platform.system() == "Linux":
+            err += "\n".join([
+                "On Linux, the installation process is very simple.",
+                "Just check your Package Distro for `libdvdcss` or possibly `libdvdcss-2` or the alike.",
+                "If it's not found, check it's User Repository or compile it yourself.",
+                "If you compile it yourself, make sure it's somewhere in PATH for pydvdcss to find it.",
+                "pydvdcss uses ctypes.util.find_library to search for the library.",
+                "It uses `/sbin/ldconfig`, `gcc`, `objdump` and `ld` to try find the library.",,
+                "Good luck!"
+            ])
+        raise EnvironmentError(err)
+    LIB = ctypes.CDLL(LIB)
     # todo ; it's assuming find_library and cdll were successful
     _open = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_char_p)(("dvdcss_open", LIB))
     _close = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_long)(("dvdcss_close", LIB))

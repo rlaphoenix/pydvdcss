@@ -116,8 +116,10 @@ or
 - [X] Implement dvdcss_error
 - [X] Implement dvdcss_is_scrambled
 - [X] Implement `__enter__` and `__exit__` for proper disposing
+- [X] Add handlers for failed find_library calls
+- [X] Add instructions for installing libdvdcss
 - [ ] Implement dvdcss_readv
-- [ ] Add handlers for failed find_library or cdll calls
+- [ ] Add handlers for failed cdll calls
 - [ ] Add function to set DVDCSS_VERBOSE
 - [ ] Add function to set DVDCSS_METHOD
 

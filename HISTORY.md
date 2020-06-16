@@ -2,7 +2,23 @@
 
 ## master
 
-- N/A
+N/A
+
+## 1.0.4
+
+**Improvements**
+
+- Add libdvdcss installation instructions for Windows, Mac, and Linux
+
+## 1.0.3
+
+**Improvements**
+
+- Add extra checks for ctypes find_library call in case one isn't found
+
+**Bugfixes**
+
+- Add handler for failed ctypes find_library call
 
 ## 1.0.2
 
