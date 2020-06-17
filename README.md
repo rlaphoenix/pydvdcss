@@ -30,9 +30,9 @@
       if dvdcss.is_scrambled():
         print("The DVD is scrambled!")
 
-      # read volume id from sector 16
-      dvdcss.seek(16)       # seek to sector 16
-      dvdcss.read(1)        # read only one sector
+      # read volume id from the ISO 9660 Volume Descriptor Set
+      dvdcss.seek(16)       # seek to sector 16, the first 15 sectors are unused by ISO 9660
+      dvdcss.read(1)        # read one sector amount of data
       data = dvdcss.buffer  # access the latest read data
       volume_label = data[40:72].strip().decode()
       print(f"{dev}: {volume_label}")
