@@ -4,6 +4,12 @@
 
 N/A
 
+## 1.0.7
+
+**Improvements**
+
+- Add handler for failed ctypes cdll call
+
 ## 1.0.6
 
 **Improvements**

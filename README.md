@@ -114,6 +114,7 @@ _Note: with the second method you will need to handle updating yourself by re-cl
 - [x] Implement dvdcss_is_scrambled
 - [x] Implement `__enter__` and `__exit__` for proper disposing
 - [x] Add handlers for failed find_library calls
+- [X] Add handlers for failed cdll calls
 - [x] Add instructions for installing libdvdcss
 - [x] Add and test support for Windows
 - [x] Add and test support for Mac OS
@@ -121,7 +122,6 @@ _Note: with the second method you will need to handle updating yourself by re-cl
 - [x] Add function to set DVDCSS_VERBOSE
 - [x] Add function to set DVDCSS_METHOD
 - [ ] Implement dvdcss_readv, not sure how this would be used or implemented
-- [ ] Handle errors for failed cdll calls if any?
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
