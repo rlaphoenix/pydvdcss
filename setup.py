@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="pydvdcss",
-    version="1.0.7",
+    version="1.0.7.post0",
     author="PHOENiX",
     author_email="rlaphoenix@pm.me",
     description="Python wrapper for VideoLAN's libdvdcss.",
