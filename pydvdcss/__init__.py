@@ -9,7 +9,7 @@ def _libdvdcss_installation():
         err += "\n".join([
             "On Windows, the installation process is a bit annoying, so I calculated it all for you:",
             f"Download the following file: `{dll}``",
-            f"Place the file in: `C:/Windows/{'SysWOW64' if platform.machine().endswith('64') else 'System32'}``",
+            f"Place the file in: `C:/Windows/{'SysWOW64' if platform.machine().endswith('64') else 'System32'}`",
             f"Done!"
         ])
     elif platform.system() == "Darwin":

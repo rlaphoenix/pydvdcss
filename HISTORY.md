@@ -2,7 +2,9 @@
 
 ## master
 
-N/A
+**Fixes**
+
+- Small typo on libdvdcss install instructions.
 
 ## 1.0.7
 
