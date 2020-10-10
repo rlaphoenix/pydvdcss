@@ -12,7 +12,7 @@
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
-    from pydvdcss import PyDvdCss
+    from pydvdcss.dvdcss import DvdCss
 
     # ...
 
@@ -20,8 +20,8 @@
     dev = "/dev/sr0"
 
     # use `with` to auto dispose once you leave the tree
-    # of course you can also just do `dvdcss = PyDvdCss()`
-    with PyDvdCss() as dvdcss:
+    # of course you can also just do `dvdcss = DvdCss()`
+    with DvdCss() as dvdcss:
 
       # open device
       dvdcss.open(dev)
@@ -40,7 +40,7 @@
 
     # make sure you dispose when your done if you didn't
     # use `with`, otherwise stuff will get stuck in memory.
-    # usage of `with` on pydvdcss automatically handles disposing.
+    # usage of `with` on DvdCss automatically handles disposing.
     # dvdcss.dispose()
 
 <p>&nbsp;</p><p>&nbsp;</p>
@@ -127,7 +127,7 @@ _Note: with the second method you will need to handle updating yourself by re-cl
 
 # Functions
 
-## PyDvdCss.open(psz_target=[string])
+## DvdCss.open(psz_target=[string])
 
 Open a DVD device or directory and return a dvdcss instance.
 
@@ -140,14 +140,14 @@ error occurred, NULL is returned.
 
 - **psz_target**: target name, e.g. "/dev/hdc" or "E:".
 
-## PyDvdCss.close()
+## DvdCss.close()
 
 Close the DVD and clean up the library.
 
 Close the DVD device and free all the memory allocated by libdvdcss.
 On return, the dvdcss_t handle is invalidated and may not be used again.
 
-## PyDvdCss.seek(i_blocks=[int], i_flags=[int;NOFLAGS])
+## DvdCss.seek(i_blocks=[int], i_flags=[int;NOFLAGS])
 
 Seek in the disc and change the current key if requested.
 
@@ -166,7 +166,7 @@ Tips:
 - **i_blocks**: absolute block offset to seek to.
 - **i_flags**: NOFLAGS by default, or you can specify SEEK_KEY or SEEK_MPEG flags.
 
-## PyDvdCss.read(i_blocks=[int], i_flags=[int;NOFLAGS])
+## DvdCss.read(i_blocks=[int], i_flags=[int;NOFLAGS])
 
 Read from the disc and decrypt data if requested.
 
@@ -175,12 +175,12 @@ Returns the amount of blocks read, or a negative value in case an error happened
 
 Tips:
 
-> Get the read contents from the buffer variable of PyDvdCss instance.
+> Get the read contents from the buffer variable of DvdCss instance.
 
 - **i_blocks**: absolute block offset to seek to.
 - **i_flags**: NOFLAGS by default, or you can specify the READ_DECRYPT flag.
 
-## PyDvdCss.error()
+## DvdCss.error()
 
 Return a string containing the latest error that occurred in the given libdvdcss
 instance.
@@ -191,7 +191,7 @@ application.
 
 Returns a null-terminated string containing the latest error message.
 
-## PyDvdCss.is_scrambled()
+## DvdCss.is_scrambled()
 
 Check if the DVD is scrambled.
 
