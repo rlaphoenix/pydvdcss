@@ -1,7 +1,7 @@
-import ctypes
-import ctypes.util
 import os
 import platform
+from ctypes import CFUNCTYPE, c_long, c_int, c_char_p, CDLL, create_string_buffer
+from ctypes.util import find_library
 from typing import Optional
 
 
@@ -33,22 +33,6 @@ def _installation():
             "Good luck!"
         ])
     raise EnvironmentError(err)
-
-
-def _load_library() -> Optional[ctypes.CDLL]:
-    """Load dvdcss DLL library via ctypes CDLL if available."""
-    dlls = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
-    dll = None
-    for dll_name in dlls:
-        dll = ctypes.util.find_library(dll_name)
-        if dll:
-            break
-    if not dll:
-        return None
-    try:
-        return ctypes.CDLL(dll)
-    except OSError:
-        return None
 
 
 class DvdCss:
@@ -105,31 +89,43 @@ class DvdCss:
         3: "SEEK_KEY & SEEK_MPEG"
     }
 
-    # Implement Functions from libdvdcss
-    # import libdvdcss if possibly via ctypes CDLL
-    LIB = _load_library()
-    if not LIB:
-        _installation()
-
-    _open = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_char_p)(("dvdcss_open", LIB))
-    _close = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_long)(("dvdcss_close", LIB))
-    _seek = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_long, ctypes.c_int, ctypes.c_int)(("dvdcss_seek", LIB))
-    _read = ctypes.CFUNCTYPE(
-        ctypes.c_int, ctypes.c_long, ctypes.c_char_p, ctypes.c_int, ctypes.c_int
-    )(("dvdcss_read", LIB))
-    _error = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_long)(("dvdcss_error", LIB))
-    _is_scrambled = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_long)(("dvdcss_is_scrambled", LIB))
-
     def __init__(self):
         self.handle = None  # libdvdcss device handle
         self.buffer = None  # buffer for read()
         self.buffer_len = 0  # length of self.buffer since we wont be able to len check it
+
+        self._library = self._load_library()
+        if not self._library:
+            _installation()
+
+        self._open = CFUNCTYPE(c_long, c_char_p)(("dvdcss_open", self._library))
+        self._close = CFUNCTYPE(c_int, c_long)(("dvdcss_close", self._library))
+        self._seek = CFUNCTYPE(c_int, c_long, c_int, c_int)(("dvdcss_seek", self._library))
+        self._read = CFUNCTYPE(c_int, c_long, c_char_p, c_int, c_int)(("dvdcss_read", self._library))
+        self._error = CFUNCTYPE(c_int, c_long)(("dvdcss_error", self._library))
+        self._is_scrambled = CFUNCTYPE(c_int, c_long)(("dvdcss_is_scrambled", self._library))
 
     def __enter__(self):
         return self
 
     def __exit__(self, *_, **kwargs):
         self.dispose()
+
+    @staticmethod
+    def _load_library() -> Optional[CDLL]:
+        """Load dvdcss DLL library via ctypes CDLL if available."""
+        dlls = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
+        dll = None
+        for dll_name in dlls:
+            dll = find_library(dll_name)
+            if dll:
+                break
+        if not dll:
+            return None
+        try:
+            return CDLL(dll)
+        except OSError:
+            return None
 
     def dispose(self):
         """Close and Dispose all data stored in this instance."""
@@ -200,7 +196,7 @@ class DvdCss:
         """
         if self.buffer_len != i_blocks:
             # the current ctypes buffer won't fit the data, resize it
-            self.buffer = ctypes.create_string_buffer(i_blocks * self.SECTOR_SIZE)
+            self.buffer = create_string_buffer(i_blocks * self.SECTOR_SIZE)
             self.buffer_len = i_blocks
         return self._read(self.handle, self.buffer, i_blocks, i_flags)
 
