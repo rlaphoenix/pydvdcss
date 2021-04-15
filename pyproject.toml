@@ -2,8 +2,25 @@
 name = "pydvdcss"
 version = "1.1.0"
 description = "Python wrapper for VideoLAN's libdvdcss."
-authors = ["PHOENiX <rlaphoenix@pm.me>"]
 license = "GPLv3"
+authors = ["PHOENiX <rlaphoenix@pm.me>"]
+maintainers = ["PHOENiX <rlaphoenix@pm.me>"]
+readme = "README.md"
+homepage = "https://github.com/rlaphoenix/pydvdcss"
+repository = "https://github.com/rlaphoenix/pydvdcss"
+documentation = "https://github.com/rlaphoenix/pydvdcss"
+keywords = ["dvd", "wrapper", "library", "videolan", "libdvdcss"]
+classifiers = [
+    # python ver and license set by poetry automatically
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Video :: Conversion"
+]
+include = ["LICENSE", "README.md", "HISTORY.md"]
 
 [tool.poetry.dependencies]
 python = ">3.6"
