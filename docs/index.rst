@@ -60,4 +60,5 @@ Pages
    :maxdepth: 2
 
    installation
+   api
    todo
