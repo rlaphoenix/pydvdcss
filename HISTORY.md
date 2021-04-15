@@ -9,7 +9,7 @@
 - set_verbosity now returns an int rather than a str value, or potentially a `None` value. It will always return either an int or -1 to represent None, which is more akin to the param input.
 - close now clears buffer and buffer length and checks if there's a handle before attempting to close it.
 - open now checks if a disc is already opened and if so, does not allow you to open until you close or dispose.
-
+- Removed the Python Implementation PyPy trove classifier. This project doesn't use PyPy.
 
 **Improvements**
 
@@ -23,6 +23,7 @@
 - Some doc-strings have been shortened or generally improved for readability; Some new ones have also been added.
 - Library DLL loading code is now moved to its own function _load_library().
 - Installation function has been renamed to _installation() to signify that it's intended to be used internally only.
+- Use Python-Poetry instead of Setuptools. This is for it's easier configuration via pyproject and it's better CLI UX.
 
 ## 1.1.0
 
