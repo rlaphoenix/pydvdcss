@@ -53,6 +53,9 @@ Features of libdvdcss
 * Adaptability — Unlike most similar projects, libdvdcss does not require the region of your drive to be set and will
   try its best to read from the disc even in the case of a region mismatch.
 
+Pages
+-----
+
 .. toctree::
    :maxdepth: 2
 
