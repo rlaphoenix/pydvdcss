@@ -56,4 +56,4 @@ Features of libdvdcss
 .. toctree::
    :maxdepth: 2
 
-   usage/installation
+   installation
