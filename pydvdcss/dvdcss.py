@@ -147,9 +147,8 @@ class DvdCss:
         open() returns a handle to be used for all subsequent libdvdcss calls. If an
         error occurred, NULL is returned.
         """
-        if self.handle:
-            # dispose current handle if a dvd is already opened
-            self.close()
+        if self.handle is not None:
+            raise ValueError("DvdCss.open: A DVD is already open in this instance.")
         self.handle = self._open(psz_target.encode())
         return self.handle
 
