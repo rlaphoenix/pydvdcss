@@ -1,10 +1,16 @@
 # Release History
 
-## master
+## 1.1.0
 
 **Fixes**
 
 - Small typo on libdvdcss install instructions.
+
+**Improvements**
+
+- Move PyDvdCss class from __init__.py to its own file, dvdcss.py so that it isn't executed during installation.
+- Rename PyDvdCss class to DvdCss, as the class isn't pydvdcss, the package is.
+- Clean up the libdvdcss dll/so installation instructions and be less specific on required versions on Windows instructions.
 
 ## 1.0.7
 
