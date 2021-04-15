@@ -2,7 +2,7 @@
 
 * * *
 
-![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Version%20tests/badge.svg?branch=master)
+![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Build/badge.svg?branch=master)
 ![Python versions](https://img.shields.io/pypi/pyversions/pydvdcss)
 [![PyPI version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
 [![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
