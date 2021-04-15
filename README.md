@@ -12,36 +12,38 @@
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
-    from pydvdcss.dvdcss import DvdCss
+```py
+from pydvdcss.dvdcss import DvdCss
 
-    # ...
+# ...
 
-    # choose device
-    dev = "/dev/sr0"
+# choose device
+dev = "/dev/sr0"  # e.g. 'E:', `/dev/sr0`, or a path to an ISO file
 
-    # use `with` to auto dispose once you leave the tree
-    # of course you can also just do `dvdcss = DvdCss()`
-    with DvdCss() as dvdcss:
+# use `with` to auto dispose once you leave the tree
+# of course you can also just do `dvdcss = DvdCss()`
+with DvdCss() as dvdcss:
 
-      # open device
-      dvdcss.open(dev)
+  # open device
+  dvdcss.open(dev)
 
-      # check if dvd is scrambled
-      if dvdcss.is_scrambled():
-        print("The DVD is scrambled!")
+  # check if dvd is scrambled
+  if dvdcss.is_scrambled():
+    print("The DVD is scrambled!")
 
-      # read volume id from the ISO 9660 Volume Descriptor Set
-      dvdcss.seek(16)       # seek to sector 16, the first 15 sectors are unused by ISO 9660
-      dvdcss.read(1)        # read one sector amount of data
-      data = dvdcss.buffer  # access the latest read data
-      volume_label = data[40:72].strip().decode()
-      print(f"{dev}: {volume_label}")
-      # >> eg. `'/dev/sr0: THE_IT_CROWD_DISC_1'`
+  # read volume id from the ISO 9660 Volume Descriptor Set
+  dvdcss.seek(16)       # seek to sector 16, the first 15 sectors are unused by ISO 9660
+  dvdcss.read(1)        # read one sector amount of data
+  data = dvdcss.buffer  # access the latest read data
+  volume_label = data[40:72].strip().decode()
+  print("%s: %s" % (dev, volume_label))
+  # >> eg. `'/dev/sr0: THE_IT_CROWD_DISC_1'`
 
-    # make sure you dispose when your done if you didn't
-    # use `with`, otherwise stuff will get stuck in memory.
-    # usage of `with` on DvdCss automatically handles disposing.
-    # dvdcss.dispose()
+# make sure you dispose when your done if you didn't
+# use `with`, otherwise stuff will get stuck in memory.
+# usage of `with` on DvdCss automatically handles disposing.
+# dvdcss.dispose()
+```
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
