@@ -164,6 +164,8 @@ class DvdCss:
         if ret != 0:
             raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
         self.handle = None
+        self.buffer = None
+        self.buffer_len = 0
         return True
 
     def seek(self, i_blocks: int, i_flags: int = NO_FLAGS) -> int:
