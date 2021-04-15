@@ -198,7 +198,8 @@ class DvdCss:
         return self._read(self.handle, self.buffer, i_blocks, i_flags)
 
     # def readv(self, p_iovec, i_blocks, i_flags):
-    #   todo ; implement readv
+    #   TODO: Implement readv, not sure how this would be used or implemented.
+    #         It's possible the need for readv via python is simply unnecessary.
 
     def error(self):
         """
