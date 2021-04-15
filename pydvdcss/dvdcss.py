@@ -222,7 +222,7 @@ class DvdCss:
     @staticmethod
     def set_verbosity(verbosity=0):
         """
-        Set libdvdcss's verbosity (DVDCSS_VERBOSE environment variable).
+        Set libdvdcss verbosity (DVDCSS_VERBOSE environment variable).
 
         Available options are int 0..2
           -1:  Unset/Remove/Reset the cracking mode.
@@ -242,7 +242,7 @@ class DvdCss:
     @staticmethod
     def set_cracking_mode(mode="key"):
         """
-        Set libdvdcss's cracking mode (DVDCSS_METHOD environment variable).
+        Set libdvdcss cracking mode (DVDCSS_METHOD environment variable).
 
         Available options:
           'unset': Unset/Remove/Reset the cracking mode.
