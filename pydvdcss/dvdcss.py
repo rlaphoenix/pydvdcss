@@ -136,7 +136,7 @@ class DvdCss:
         self.set_verbosity(-1)
         self.set_cracking_mode("unset")
 
-    def open(self, psz_target):
+    def open(self, psz_target: str) -> int:
         """
         Open a DVD device or directory and return a dvdcss instance.
 
@@ -153,7 +153,7 @@ class DvdCss:
         self.handle = self._open(psz_target.encode())
         return self.handle
 
-    def close(self):
+    def close(self) -> bool:
         """
         Close the DVD and clean up the library.
 
@@ -166,7 +166,7 @@ class DvdCss:
         self.handle = None
         return True
 
-    def seek(self, i_blocks, i_flags=NO_FLAGS):
+    def seek(self, i_blocks: int, i_flags: int = NO_FLAGS) -> int:
         """
         Seek in the disc and change the current key if requested.
 
@@ -181,7 +181,7 @@ class DvdCss:
         """
         return self._seek(self.handle, i_blocks, i_flags)
 
-    def read(self, i_blocks, i_flags=NO_FLAGS):
+    def read(self, i_blocks: int, i_flags: int = NO_FLAGS) -> int:
         """
         Read from the disc and decrypt data if requested.
 
@@ -201,7 +201,7 @@ class DvdCss:
     #   TODO: Implement readv, not sure how this would be used or implemented.
     #         It's possible the need for readv via python is simply unnecessary.
 
-    def error(self):
+    def error(self) -> str:
         """
         Return a string containing the latest error that occurred in the given libdvdcss
         instance.
@@ -214,14 +214,14 @@ class DvdCss:
         """
         return self._error(self.handle)
 
-    def is_scrambled(self):
         """
         Check if the DVD is scrambled.
         """
+    def is_scrambled(self) -> bool:
         return self._is_scrambled(self.handle) == 1
 
     @staticmethod
-    def set_verbosity(verbosity=0):
+    def set_verbosity(verbosity: int = 0) -> int:
         """
         Set libdvdcss verbosity (DVDCSS_VERBOSE environment variable).
 
