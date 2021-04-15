@@ -160,9 +160,10 @@ class DvdCss:
         Close the DVD device and free all the memory allocated by libdvdcss.
         On return, the dvdcss_t handle is invalidated and may not be used again.
         """
-        ret = self._close(self.handle)
-        if ret != 0:
-            raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
+        if self.handle is not None:
+            ret = self._close(self.handle)
+            if ret != 0:
+                raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
         self.handle = None
         self.buffer = None
         self.buffer_len = 0
