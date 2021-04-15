@@ -128,6 +128,7 @@ class DvdCss:
         self.dispose()
 
     def dispose(self):
+        """Close and Dispose all data stored in this instance."""
         self.buffer = None
         self.buffer_len = 0
         if self.handle:
