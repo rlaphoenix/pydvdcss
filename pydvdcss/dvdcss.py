@@ -202,17 +202,9 @@ class DvdCss:
     #         It's possible the need for readv via python is simply unnecessary.
 
     def error(self) -> str:
-        """
-        Return a string containing the latest error that occurred in the given libdvdcss
-        instance.
+        """Get the latest error that occurred in the given libdvdcss instance."""
+        return self._error(self.handle).rstrip()
 
-        This function returns a constant string containing the latest error that occurred
-        in libdvdcss. It can be used to format error messages at your convenience in your
-        application.
-
-        Returns a null-terminated string containing the latest error message.
-        """
-        return self._error(self.handle)
 
         """
         Check if the DVD is scrambled.
