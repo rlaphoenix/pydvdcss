@@ -1,7 +1,7 @@
 pydvdcss
 ==================================================
 
-Release v\ |version|.
+Release v\ |version|. (:ref:`Installation <installation>`)
 
 .. image:: https://pepy.tech/badge/pydvdcss
     :target: https://pepy.tech/project/pydvdcss
