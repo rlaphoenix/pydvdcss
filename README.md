@@ -103,7 +103,7 @@ $ python -m pip install --user .
 - [x] Implement dvdcss_is_scrambled
 - [x] Implement `__enter__` and `__exit__` for proper disposing
 - [x] Add handlers for failed find_library calls
-- [X] Add handlers for failed cdll calls
+- [x] Add handlers for failed cdll calls
 - [x] Add instructions for installing libdvdcss
 - [x] Add and test support for Windows
 - [x] Add and test support for Mac OS
