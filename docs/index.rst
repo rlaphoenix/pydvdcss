@@ -60,3 +60,4 @@ Pages
    :maxdepth: 2
 
    installation
+   todo
