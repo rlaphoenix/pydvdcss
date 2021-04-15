@@ -4,6 +4,8 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+from dunamai import Version, Style
+
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -22,8 +24,8 @@ copyright = '2021, PHOENiX'
 author = 'PHOENiX'
 
 # The full version, including alpha/beta/rc tags
-version = '1.2.0'
-release = '1.2.0'
+version = Version.from_git().base
+release = version
 
 
 # -- General configuration ---------------------------------------------------
