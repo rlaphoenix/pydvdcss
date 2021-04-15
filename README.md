@@ -92,15 +92,22 @@ Unlike most similar projects, `libdvdcss` does not require the region of your dr
 
 # Installation
 
-    python -m pip install --user pydvdcss
+from PyPI:
 
-or
+```shell
+$ python -m pip install --user pydvdcss
+```
 
-    git clone https://github.com/rlaPHOENiX/pydvdcss.git
-    cd pydvdcss
-    python -m pip install --user .
+or from source-code:
 
-_Note: with the second method you will need to handle updating yourself by re-cloning and installing it again._
+- Source-code may have changes that are not yet tested or stable, and may have regressions.
+- Only install from Source-code if you have a reason, e.g. to test changes.
+
+```shell
+$ git clone https://github.com/rlaPHOENiX/pydvdcss.git
+$ cd pydvdcss
+$ python -m pip install --user .
+```
 
 <p>&nbsp;</p><p>&nbsp;</p>
 
