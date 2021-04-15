@@ -10,7 +10,7 @@ def installation():
         err += "\n".join([
             "On Windows, the installation process is a bit annoying, so I calculated it all for you:",
             "Find or compile the latest libdvdcss DLL for Windows, then place the file in:",
-            f"`C:/Windows/{'SysWOW64' if platform.machine().endswith('64') else 'System32'}`",
+            "`C:/Windows/%s`" % ("SysWOW64" if platform.machine().endswith("64") else "System32"),
             "Done!"
         ])
     elif platform.system() == "Darwin":
@@ -162,7 +162,7 @@ class DvdCss:
         """
         ret = self._close(self.handle)
         if ret != 0:
-            raise ValueError(f"DvdCss.close: Failed to close device handle: {self.error()}")
+            raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
         self.handle = None
         return True
 
