@@ -8,6 +8,7 @@
 [![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
 [![PyPI status](https://img.shields.io/pypi/status/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
 [![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/issues)
+[![DeepSource issues](https://deepsource.io/gh/rlaPHOENiX/pydvdcss.svg/?label=active+issues)](https://deepsource.io/gh/rlaPHOENiX/pydvdcss/?ref=repository-badge)
 [![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/graphs/contributors)
 
 **pydvdcss** is a python wrapper for VideoLAN's [libdvdcss].
