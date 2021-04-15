@@ -4,7 +4,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-from dunamai import Version, Style
+from dunamai import Version
 
 # -- Path setup --------------------------------------------------------------
 
