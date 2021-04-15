@@ -2,6 +2,7 @@
 
 * * *
 
+[![Docs](https://readthedocs.org/projects/pip/badge/)](https://pydvdcss.readthedocs.io)
 ![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Build/badge.svg?branch=master)
 ![Python versions](https://img.shields.io/pypi/pyversions/pydvdcss)
 [![PyPI version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
