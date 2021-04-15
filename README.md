@@ -1,4 +1,4 @@
-![Banner](banner.png?raw=true)
+![Banner](https://rawcdn.githack.com/rlaPHOENiX/pydvdcss/dfea6bed42cf13cb9d5839ddc1c54f4efbc5ec5e/banner.png)
 
 * * *
 
