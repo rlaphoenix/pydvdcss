@@ -23,7 +23,8 @@ classifiers = [
 include = ["LICENSE", "README.md", "HISTORY.md"]
 
 [tool.poetry.dependencies]
-python = ">=3.5"
+python = ">=3.5,<4.0"
+poetry-dynamic-versioning = "^0.12.4"
 
 [tool.poetry.dev-dependencies]
 Sphinx = "^3.5.4"
