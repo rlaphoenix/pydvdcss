@@ -205,11 +205,8 @@ class DvdCss:
         """Get the latest error that occurred in the given libdvdcss instance."""
         return self._error(self.handle).rstrip()
 
-
-        """
-        Check if the DVD is scrambled.
-        """
     def is_scrambled(self) -> bool:
+        """Check if the DVD is scrambled."""
         return self._is_scrambled(self.handle) == 1
 
     @staticmethod
