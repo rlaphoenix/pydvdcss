@@ -83,6 +83,9 @@ or from source-code:
 
 - Source-code may have changes that are not yet tested or stable, and may have regressions.
 - Only install from Source-code if you have a reason, e.g. to test changes.
+- Requires [Poetry] as it's used as the build system backend.
+
+  [Poetry]: <https://python-poetry.org/docs/#installation>
 
 ```shell
 $ git clone https://github.com/rlaPHOENiX/pydvdcss.git
