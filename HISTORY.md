@@ -13,12 +13,12 @@
 
 **Improvements**
 
+- Python 3.5 support by removing all uses of f-strings.
 - Add to DeepSource; Badge added to README.
 - README re-worked, all HTML tags removed or replaced with Markdown. Positioning of information moved around for better readability.
 - Ko-fi references, badges, and links removed. I don't accept any donations from Ko-fi anymore.
 - Python 3.9 build tests added to GitHub Actions. Renamed the action from "Version tests" to "Build" for a shorter badge.
 - DvdCss now imported into `__init__.py` allowing faster and shorter import paths for the user. E.g. `from pydvdcss import DvdCss` instead of `from pydvdcss.dvdcss import DvdCss`.
-- All uses of f-strings have been removed to try to obtain support for Python 3.5. No tests have been made yet.
 - Type-hinting has been added where applicable to both params and returns.
 - Some doc-strings have been shortened or generally improved for readability; Some new ones have also been added.
 - Library DLL loading code is now moved to its own function _load_library().
