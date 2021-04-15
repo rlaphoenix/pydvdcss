@@ -5,7 +5,7 @@ import platform
 from typing import Optional
 
 
-def installation():
+def _installation():
     err = "PyDvdCss: Unable to locate libdvdcss library, please install it.\n"
     if platform.system() == "Windows":
         err += "\n".join([
@@ -107,7 +107,7 @@ class DvdCss:
     # import libdvdcss if possibly via ctypes CDLL
     LIB = _load_library()
     if not LIB:
-        installation()
+        _installation()
 
     _open = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_char_p)(("dvdcss_open", LIB))
     _close = ctypes.CFUNCTYPE(ctypes.c_int, ctypes.c_long)(("dvdcss_close", LIB))
