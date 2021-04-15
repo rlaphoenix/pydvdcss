@@ -236,9 +236,9 @@ class DvdCss:
         """
         if verbosity == -1:
             os.unsetenv("DVDCSS_VERBOSE")
-            return None
+            return -1
         os.environ["DVDCSS_VERBOSE"] = str(verbosity)
-        return os.environ["DVDCSS_VERBOSE"]
+        return int(os.environ["DVDCSS_VERBOSE"])
 
     @staticmethod
     def set_cracking_mode(mode="key"):
