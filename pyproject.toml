@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydvdcss"
-version = "1.2.0"
+version = "0.0.0"
 description = "Python wrapper for VideoLAN's libdvdcss."
 license = "GPLv3"
 authors = ["PHOENiX <rlaphoenix@pm.me>"]
@@ -30,6 +30,11 @@ poetry-dynamic-versioning = "^0.12.4"
 Sphinx = "^3.5.4"
 dunamai = "^1.5.4"
 
+[tool.poetry-dynamic-versioning]
+enable = true
+style = "semver"
+latest-tag = true
+
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
 build-backend = "poetry.core.masonry.api"
