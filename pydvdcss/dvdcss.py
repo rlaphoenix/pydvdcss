@@ -6,6 +6,7 @@ from typing import Optional
 
 
 def _installation():
+    """Raise dvdcss DLL library installation instructions."""
     err = "PyDvdCss: Unable to locate libdvdcss library, please install it.\n"
     if platform.system() == "Windows":
         err += "\n".join([
