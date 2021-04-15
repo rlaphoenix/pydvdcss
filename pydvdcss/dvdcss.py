@@ -2,6 +2,7 @@ import ctypes
 import ctypes.util
 import os
 import platform
+from typing import Optional
 
 
 def installation():
@@ -31,6 +32,21 @@ def installation():
             "Good luck!"
         ])
     raise EnvironmentError(err)
+
+
+def _load_library() -> Optional[ctypes.CDLL]:
+    dlls = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
+    dll = None
+    for dll_name in dlls:
+        dll = ctypes.util.find_library(dll_name)
+        if dll:
+            break
+    if not dll:
+        return None
+    try:
+        return ctypes.CDLL(dll)
+    except OSError:
+        return None
 
 
 class DvdCss:
@@ -89,22 +105,8 @@ class DvdCss:
 
     # Implement Functions from libdvdcss
     # import libdvdcss if possibly via ctypes CDLL
-    LIB = None
-    for crib in [
-        "dvdcss",  # common linux
-        "dvdcss2",  # possible common linux
-        "libdvdcss",  # common windows
-        "libdvdcss2",  # also common windows
-        "libdvdcss-2"  # also common windows
-    ]:
-        LIB = ctypes.util.find_library(crib)
-        if LIB:
-            break
+    LIB = _load_library()
     if not LIB:
-        installation()
-    try:
-        LIB = ctypes.CDLL(LIB)
-    except OSError:
         installation()
 
     _open = ctypes.CFUNCTYPE(ctypes.c_long, ctypes.c_char_p)(("dvdcss_open", LIB))
