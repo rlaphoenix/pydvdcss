@@ -35,6 +35,7 @@ def _installation():
 
 
 def _load_library() -> Optional[ctypes.CDLL]:
+    """Load dvdcss DLL library via ctypes CDLL if available."""
     dlls = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
     dll = None
     for dll_name in dlls:
