@@ -1,6 +1,6 @@
 # Release History
 
-## master
+## 1.2.0
 
 **Fixes**
 
@@ -10,6 +10,7 @@
 - close now clears buffer and buffer length and checks if there's a handle before attempting to close it.
 - open now checks if a disc is already opened and if so, does not allow you to open until you close or dispose.
 - Removed the Python Implementation PyPy trove classifier. This project doesn't use PyPy.
+- Updated HISTORY to include changes for 1.1.0, which I forgot to do.
 
 **Improvements**
 
