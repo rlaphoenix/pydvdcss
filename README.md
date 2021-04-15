@@ -1,16 +1,21 @@
-<span align="center">
-
 ![Banner](banner.png?raw=true)
 
-</span>
+* * *
 
----
+![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Version%20tests/badge.svg?branch=master)
+![Python versions](https://img.shields.io/pypi/pyversions/pydvdcss)
+[![PyPI version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
+[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
+[![PyPI status](https://img.shields.io/pypi/status/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
+[![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/issues)
+[![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/graphs/contributors)
 
-<p>&nbsp;</p><p>&nbsp;</p>
+**pydvdcss** is a python wrapper for VideoLAN's [libdvdcss].
 
-<p align="center"><strong>pydvdcss</strong> is a python wrapper for VideoLAN's <a href="https://www.videolan.org/developers/libdvdcss.html">libdvdcss</a></p>
+[libdvdcss] is a simple library designed for accessing DVDs like a block device without having to bother about the
+decryption.
 
-<p>&nbsp;</p><p>&nbsp;</p>
+  [libdvdcss]: <https://www.videolan.org/developers/libdvdcss.html>
 
 ```py
 from pydvdcss.dvdcss import DvdCss
@@ -45,30 +50,7 @@ with DvdCss() as dvdcss:
 # dvdcss.dispose()
 ```
 
-<p>&nbsp;</p><p>&nbsp;</p>
-
 ---
-
-<p>&nbsp;</p><p>&nbsp;</p>
-
-`libdvdcss` is a simple library designed for accessing DVDs like a block device without having to bother about the decryption. `pydvdcss` exposes this library as a class taking care of the rest.
-
-<p>&nbsp;</p><p>&nbsp;</p>
-
-<span align="center">
-
-[![Pull requests welcome](https://img.shields.io/badge/PRs-welcome-brightgreen)](http://makeapullrequest.com)
-[![GPLv3 license](https://img.shields.io/badge/license-GPLv3-blue)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
-[![PyPI version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
-[![Python versions](https://img.shields.io/pypi/pyversions/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
-[![PyPI status](https://img.shields.io/pypi/status/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
-[![Contributors](https://img.shields.io/github/contributors/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/graphs/contributors)
-[![GitHub issues](https://img.shields.io/github/issues/rlaPHOENiX/pydvdcss)](https://github.com/rlaPHOENiX/pydvdcss/issues)
-![Python version tests](https://github.com/rlaPHOENiX/pydvdcss/workflows/Version%20tests/badge.svg?branch=master)
-
-</span>
-
-<p>&nbsp;</p><p>&nbsp;</p>
 
 ## Features
 
@@ -88,9 +70,7 @@ A DVD player can be built around the `libdvdcss` API using no more than 4 or 5 l
 
 Unlike most similar projects, `libdvdcss` does not require the region of your drive to be set.
 
-<p>&nbsp;</p><p>&nbsp;</p>
-
-# Installation
+## Installation
 
 from PyPI:
 
@@ -109,9 +89,7 @@ $ cd pydvdcss
 $ python -m pip install --user .
 ```
 
-<p>&nbsp;</p><p>&nbsp;</p>
-
-# To-do
+## To-do
 
 - [x] Implement dvdcss_open
 - [x] Implement dvdcss_close
@@ -130,11 +108,9 @@ $ python -m pip install --user .
 - [x] Add function to set DVDCSS_METHOD
 - [ ] Implement dvdcss_readv, not sure how this would be used or implemented
 
-<p>&nbsp;</p><p>&nbsp;</p>
+## Functions
 
-# Functions
-
-## DvdCss.open(psz_target=[string])
+### DvdCss.open(psz_target=[string])
 
 Open a DVD device or directory and return a dvdcss instance.
 
@@ -147,14 +123,14 @@ error occurred, NULL is returned.
 
 - **psz_target**: target name, e.g. "/dev/hdc" or "E:".
 
-## DvdCss.close()
+### DvdCss.close()
 
 Close the DVD and clean up the library.
 
 Close the DVD device and free all the memory allocated by libdvdcss.
 On return, the dvdcss_t handle is invalidated and may not be used again.
 
-## DvdCss.seek(i_blocks=[int], i_flags=[int;NOFLAGS])
+### DvdCss.seek(i_blocks=[int], i_flags=[int;NOFLAGS])
 
 Seek in the disc and change the current key if requested.
 
@@ -173,7 +149,7 @@ Tips:
 - **i_blocks**: absolute block offset to seek to.
 - **i_flags**: NOFLAGS by default, or you can specify SEEK_KEY or SEEK_MPEG flags.
 
-## DvdCss.read(i_blocks=[int], i_flags=[int;NOFLAGS])
+### DvdCss.read(i_blocks=[int], i_flags=[int;NOFLAGS])
 
 Read from the disc and decrypt data if requested.
 
@@ -187,7 +163,7 @@ Tips:
 - **i_blocks**: absolute block offset to seek to.
 - **i_flags**: NOFLAGS by default, or you can specify the READ_DECRYPT flag.
 
-## DvdCss.error()
+### DvdCss.error()
 
 Return a string containing the latest error that occurred in the given libdvdcss
 instance.
@@ -198,24 +174,16 @@ application.
 
 Returns a null-terminated string containing the latest error message.
 
-## DvdCss.is_scrambled()
+### DvdCss.is_scrambled()
 
 Check if the DVD is scrambled.
 
 Returns True if it's scrambled.
 
-<p>&nbsp;</p><p>&nbsp;</p>
-
 ---
-
-<p>&nbsp;</p><p>&nbsp;</p>
-
-<span align="center">
 
 ## [PHOENiX](https://github.com/rlaPHOENiX)
 
 ## [LICENSE (GPLv3)](https://github.com/rlaPHOENiX/pydvdcss/blob/master/LICENSE)
 
 ## [CONTRIBUTORS](https://github.com/rlaPHOENiX/pydvdcss/graphs/contributors)
-
-</span>
