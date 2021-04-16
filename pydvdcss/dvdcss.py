@@ -1,6 +1,6 @@
 import os
 import platform
-from ctypes import CFUNCTYPE, c_long, c_int, c_char_p, CDLL, create_string_buffer
+from ctypes import CFUNCTYPE, c_void_p, c_int, c_char_p, CDLL, create_string_buffer
 from ctypes.util import find_library
 from typing import Optional
 
@@ -82,12 +82,12 @@ class DvdCss:
         if not self._library:
             _installation()
 
-        self._open = CFUNCTYPE(c_long, c_char_p)(("dvdcss_open", self._library))
-        self._close = CFUNCTYPE(c_int, c_long)(("dvdcss_close", self._library))
-        self._seek = CFUNCTYPE(c_int, c_long, c_int, c_int)(("dvdcss_seek", self._library))
-        self._read = CFUNCTYPE(c_int, c_long, c_char_p, c_int, c_int)(("dvdcss_read", self._library))
-        self._error = CFUNCTYPE(c_int, c_long)(("dvdcss_error", self._library))
-        self._is_scrambled = CFUNCTYPE(c_int, c_long)(("dvdcss_is_scrambled", self._library))
+        self._open = CFUNCTYPE(c_void_p, c_char_p)(("dvdcss_open", self._library))
+        self._close = CFUNCTYPE(c_int, c_void_p)(("dvdcss_close", self._library))
+        self._seek = CFUNCTYPE(c_int, c_void_p, c_int, c_int)(("dvdcss_seek", self._library))
+        self._read = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int, c_int)(("dvdcss_read", self._library))
+        self._error = CFUNCTYPE(c_int, c_void_p)(("dvdcss_error", self._library))
+        self._is_scrambled = CFUNCTYPE(c_int, c_void_p)(("dvdcss_is_scrambled", self._library))
 
     def __enter__(self):
         return self
