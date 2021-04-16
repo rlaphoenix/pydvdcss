@@ -1,5 +1,26 @@
 # Release History
 
+## 1.3.0
+
+**Fixes**
+
+- Use githack cdn url for README banner so pages outside of github.com can correctly render the banner.
+- Small typos fixed here and there. Some "typos" more like errors, have also been fixed in some docs.
+- open: If handle is 0, return -1 and invalidate the handle instead of returning 0 as if it was it's actual handle.
+- _load_library: If CDLL fails, let it raise an exception instead of returning None. (don't hide the error info).
+- libdvdcss definitions: The handle type should be c_void_p not c_long. This fixes pydvdcss on Windows.
+- read: Buffer should have a default of nothing, not \x00*size. Safety fix.
+- read: Remove unnecessary buffer_len check and variable. It is no longer wanted nor necessary. Safety fix.
+- read: Always create a new buffer, don't use one from previous reads. Removes self.buffer entirely. It *might* cause slowdowns (I really dont know) but it isnt safe to do that. Safety fix.
+- read: If read blocks is < 0 value, assume error, raise IOError.
+
+**Improvements**
+
+- Create Sphinx docs in /docs and https://pydvdcss.readthedocs.io/. The doc information is also quite heavily updated pretty much all-round.
+- Use dunamai and poetry-dynamic-versioning to automatically handle versions based on git tags.
+- _load_library: Add checks for local DLL paths.
+- read: Instead of returning count read bytes, return the actual read bytes. If you need the length of read bytes, it's now accurate and possible to len() the return.
+
 ## 1.2.0
 
 **Fixes**
