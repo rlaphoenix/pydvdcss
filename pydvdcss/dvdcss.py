@@ -106,7 +106,6 @@ class DvdCss:
             if dll:
                 break
             dll = str((Path(__file__).parent.parent / dll_name).with_suffix(".dll"))
-            print(dll)
             if os.path.exists(dll):
                 break
         if not dll:
