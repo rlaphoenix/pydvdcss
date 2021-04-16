@@ -187,18 +187,15 @@ class DvdCss:
         """
         return self._seek(self.handle, i_blocks, i_flags)
 
-    def read(self, i_blocks: int, i_flags: int = NO_FLAGS) -> int:
+    def read(self, i_blocks: int, i_flags: int = NO_FLAGS) -> bytes:
         """
         Read from the disc and decrypt data if requested.
-
-        Get the read contents from the buffer variable of PyDvdCss instance.
 
         Parameters:
             i_blocks: Number of logical blocks (2048*n) to read.
             i_flags: NO_FLAGS by default, or you can specify the READ_DECRYPT flag.
 
-        Returns the amount of blocks read, or a negative value if an error
-        occurred.
+        Returns the read logical blocks, or raises an IOError if a reading error occurs.
         """
         # noinspection PyBroadException
         try:
@@ -206,7 +203,7 @@ class DvdCss:
             self.read = self._read(self.handle, self.buffer, i_blocks, i_flags)
             if self.read < 0:
                 raise IOError("DvdCss.read: An error occurred while reading: %s" % self.error())
-            return self.read
+            return self.buffer.raw[:self.read]
         except Exception:
             # ensure the buffer is always correct and up to date data, not archaic
             # data from older successful reads
