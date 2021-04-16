@@ -198,7 +198,7 @@ class DvdCss:
         read = self._read(self.handle, buffer, i_blocks, i_flags)
         if read < 0:
             raise IOError("DvdCss.read: An error occurred while reading: %s" % self.error())
-        return buffer.raw[:read]
+        return buffer.raw[:read * self.SECTOR_SIZE]
 
     # def readv(self, p_iovec, i_blocks, i_flags):
     #   TODO: Implement readv, not sure how this would be used or implemented.
