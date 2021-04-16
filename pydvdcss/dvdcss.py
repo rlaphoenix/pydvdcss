@@ -76,7 +76,6 @@ class DvdCss:
 
     def __init__(self):
         self.handle = None  # libdvdcss device handle
-        self.buffer = None  # buffer for read()
 
         self._library = self._load_library()
         if not self._library:
@@ -112,7 +111,6 @@ class DvdCss:
         return CDLL(dll)
 
     def dispose(self):
-        self.buffer = None
         """
         Closes any open disc and frees all data stored in this instance.
         It also unsets the libdvdcss verbosity and cracking mode.
@@ -165,7 +163,6 @@ class DvdCss:
             if ret != 0:
                 raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
         self.handle = None
-        self.buffer = None
         return True
 
     def seek(self, i_blocks: int, i_flags: int = NO_FLAGS) -> int:
@@ -197,18 +194,11 @@ class DvdCss:
 
         Returns the read logical blocks, or raises an IOError if a reading error occurs.
         """
-        # noinspection PyBroadException
-        try:
-            self.buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
-            self.read = self._read(self.handle, self.buffer, i_blocks, i_flags)
-            if self.read < 0:
-                raise IOError("DvdCss.read: An error occurred while reading: %s" % self.error())
-            return self.buffer.raw[:self.read]
-        except Exception:
-            # ensure the buffer is always correct and up to date data, not archaic
-            # data from older successful reads
-            self.buffer = b''
-            raise
+        buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
+        read = self._read(self.handle, buffer, i_blocks, i_flags)
+        if read < 0:
+            raise IOError("DvdCss.read: An error occurred while reading: %s" % self.error())
+        return buffer.raw[:read]
 
     # def readv(self, p_iovec, i_blocks, i_flags):
     #   TODO: Implement readv, not sure how this would be used or implemented.
