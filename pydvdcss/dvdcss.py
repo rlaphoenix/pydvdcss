@@ -103,8 +103,9 @@ class DvdCss:
             dll = find_library(dll_name)
             if dll:
                 break
-            dll = str((Path(__file__).parent.parent / dll_name).with_suffix(".dll"))
-            if os.path.exists(dll):
+            local_path = (Path(__file__).parent.parent / dll_name).with_suffix(".dll")
+            if local_path.exists():
+                dll = str(local_path)
                 break
         if not dll:
             return None
