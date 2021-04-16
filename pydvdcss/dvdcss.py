@@ -200,9 +200,15 @@ class DvdCss:
         Returns the amount of blocks read, or a negative value if an error
         occurred.
         """
+        # noinspection PyBroadException
+        try:
             self.buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
-        self.buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
-        return self._read(self.handle, self.buffer, i_blocks, i_flags)
+            return self._read(self.handle, self.buffer, i_blocks, i_flags)
+        except Exception:
+            # ensure the buffer is always correct and up to date data, not archaic
+            # data from older successful reads
+            self.buffer = b''
+            raise
 
     # def readv(self, p_iovec, i_blocks, i_flags):
     #   TODO: Implement readv, not sure how this would be used or implemented.
