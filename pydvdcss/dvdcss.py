@@ -222,7 +222,7 @@ class DvdCss:
         """
         Set libdvdcss verbosity (DVDCSS_VERBOSE environment variable).
 
-        - -1: Unset/Remove/Reset the cracking mode.
+        - -1: Unset the DVDCSS_VERBOSE environment variable.
         -  0: No error messages, no debug messages (this is the default).
         -  1: Only error messages.
         -  2: Error and debug messages.
@@ -241,7 +241,7 @@ class DvdCss:
         """
         Set libdvdcss cracking mode (DVDCSS_METHOD environment variable).
 
-        - unset: Unset/Remove/Reset the cracking mode.
+        - unset: Unset the DVDCSS_METHOD environment variable.
         - title: By default the decrypted title key is guessed from the encrypted
           sectors of the stream. Thus it should work with a file as well as
           the DVD device. But decrypting a title key may take too much time
