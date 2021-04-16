@@ -138,6 +138,10 @@ class DvdCss:
         libdvdcss checks whether ioctls can be performed on the disc, and when possible,
         the disc key is retrieved.
 
+        Parameters:
+            psz_target: A block device string, e.g. "E:", "/dev/sr0", an ISO image file,
+                or a VOB/IFO structure directory.
+
         Returns a handle to be used for all subsequent libdvdcss calls.
         If an error occurred, NULL is returned.
         """
@@ -165,9 +169,12 @@ class DvdCss:
 
     def seek(self, i_blocks: int, i_flags: int = NO_FLAGS) -> int:
         """
-        Seek in the disc and change the current key if requested.
+        Seeks to the requested position of the disc, in logical blocks.
 
-        This function seeks to the requested position, in logical blocks.
+        Parameters:
+            i_blocks: Position in logical blocks (2048*n) to seek to.
+            i_flags: NO_FLAGS by default, or you can specify SEEK_MPEG or SEEK_KEY flags.
+
         Returns the new position in blocks, or a negative value if an error
         occurred.
 
@@ -175,6 +182,7 @@ class DvdCss:
           on the first sector.
         - Use SEEK_KEY flag the first time you enter a TITLE. You *can* always call it
           in VOB data sectors, however it will be unnecessary and cause slowdowns.
+
         """
         return self._seek(self.handle, i_blocks, i_flags)
 
@@ -182,11 +190,14 @@ class DvdCss:
         """
         Read from the disc and decrypt data if requested.
 
-        This function reads i_blocks logical blocks from the DVD.
+        Get the read contents from the buffer variable of PyDvdCss instance.
+
+        Parameters:
+            i_blocks: Number of logical blocks (2048*n) to read.
+            i_flags: NO_FLAGS by default, or you can specify the READ_DECRYPT flag.
+
         Returns the amount of blocks read, or a negative value if an error
         occurred.
-
-        Get the read contents from the buffer variable of PyDvdCss instance.
         """
         if self.buffer_len != i_blocks:
             # the current ctypes buffer won't fit the data, resize it
