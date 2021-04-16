@@ -44,25 +44,9 @@ class DvdCss:
     VLC, a full video client/server streaming solution. VLC can  also be used as
     a standalone program to play video streams from a hard disk or a DVD.
 
-    Environment Variables:
-
-        DVDCSS_METHOD={title|disc|key}: method for key decryption
-          title: By default the decrypted title key is guessed from the encrypted
-              sectors of the stream. Thus it should work with a file as well as
-              the DVD device. But decrypting a title key may take too much time
-              or even fail. With the title method, the key is only checked at
-              the beginning of each title, so it will not work if the key
-              changes in the middle of a title.
-          disc:  The disc key is cracked first. Afterwards all title keys can be
-              decrypted instantly, which allows checking them often.
-          key:   The same as the "disc" method if you do not have a file with player
-              keys at compile time. If you do, disc key decryption will be faster.
-              This is the default method also employed by libdvdcss.
-
-        DVDCSS_VERBOSE={0|1|2}: libdvdcss verbosity
-          0: no error messages, no debug messages (this is the default)
-          1: only error messages
-          2: error and debug messages
+    The Environment Variables `DVDCSS_METHOD` and `DVDCSS_VERBOSE` are handled
+    by :func:`set_cracking_mode` and :func:`set_verbosity` respectively. See
+    those functions for more information.
 
     libdvdcss is copyright VideoLAN
     """
@@ -128,9 +112,18 @@ class DvdCss:
             return None
 
     def dispose(self):
-        """Close and Dispose all data stored in this instance."""
         self.buffer = None
         self.buffer_len = 0
+        """
+        Closes any open disc and frees all data stored in this instance.
+        It also unsets the libdvdcss verbosity and cracking mode.
+
+        This should be run when you intend to re-use the object for a new
+        disc and want to start fresh.
+
+        If you simply want to open a new disc with the same settings and
+        environment, run :func:`close` instead.
+        """
         if self.handle:
             self.close()
         # reset verbosity and cracking mode environment variables
@@ -145,8 +138,8 @@ class DvdCss:
         libdvdcss checks whether ioctls can be performed on the disc, and when possible,
         the disc key is retrieved.
 
-        open() returns a handle to be used for all subsequent libdvdcss calls. If an
-        error occurred, NULL is returned.
+        Returns a handle to be used for all subsequent libdvdcss calls.
+        If an error occurred, NULL is returned.
         """
         if self.handle is not None:
             raise ValueError("DvdCss.open: A DVD is already open in this instance.")
@@ -155,10 +148,11 @@ class DvdCss:
 
     def close(self) -> bool:
         """
-        Close the DVD and clean up the library.
+        Close the DVD by freeing the dvdcss memory and handle of the block device.
+        It also clears the local data buffer.
 
-        Close the DVD device and free all the memory allocated by libdvdcss.
-        On return, the dvdcss_t handle is invalidated and may not be used again.
+        This should always be run once you are finished with the opened disc, even
+        if you don't intend to open another disc in the same instance.
         """
         if self.handle is not None:
             ret = self._close(self.handle)
@@ -174,8 +168,8 @@ class DvdCss:
         Seek in the disc and change the current key if requested.
 
         This function seeks to the requested position, in logical blocks.
-        Returns the new position in blocks, or a negative value in case an error
-        happened.
+        Returns the new position in blocks, or a negative value if an error
+        occurred.
 
         - Use SEEK_MPEG flag when seeking throughout VOB data sectors. It isn't needed
           on the first sector.
@@ -189,10 +183,10 @@ class DvdCss:
         Read from the disc and decrypt data if requested.
 
         This function reads i_blocks logical blocks from the DVD.
-        Returns the amount of blocks read, or a negative value in case an error happened.
+        Returns the amount of blocks read, or a negative value if an error
+        occurred.
 
-        Tips:
-        - Get the read contents from the buffer variable of PyDvdCss instance.
+        Get the read contents from the buffer variable of PyDvdCss instance.
         """
         if self.buffer_len != i_blocks:
             # the current ctypes buffer won't fit the data, resize it
@@ -205,11 +199,11 @@ class DvdCss:
     #         It's possible the need for readv via python is simply unnecessary.
 
     def error(self) -> str:
-        """Get the latest error that occurred in the given libdvdcss instance."""
+        """Returns the latest error that occurred in the given libdvdcss instance."""
         return self._error(self.handle).rstrip()
 
     def is_scrambled(self) -> bool:
-        """Check if the DVD is scrambled."""
+        """Check if the disc is scrambled."""
         return self._is_scrambled(self.handle) == 1
 
     @staticmethod
@@ -217,11 +211,10 @@ class DvdCss:
         """
         Set libdvdcss verbosity (DVDCSS_VERBOSE environment variable).
 
-        Available options are int 0..2
-          -1:  Unset/Remove/Reset the cracking mode.
-           0:  no error messages, no debug messages (this is the default)
-           1:  only error messages
-           2:  error and debug messages
+        - -1: Unset/Remove/Reset the cracking mode.
+        -  0: No error messages, no debug messages (this is the default).
+        -  1: Only error messages.
+        -  2: Error and debug messages.
 
         Returns the now current value of DVDCSS_VERBOSE, expected value should be
         the same as the verbosity int provided.
@@ -237,19 +230,18 @@ class DvdCss:
         """
         Set libdvdcss cracking mode (DVDCSS_METHOD environment variable).
 
-        Available options:
-          'unset': Unset/Remove/Reset the cracking mode.
-          'title': By default the decrypted title key is guessed from the encrypted
-                   sectors of the stream. Thus it should work with a file as well as
-                   the DVD device. But decrypting a title key may take too much time
-                   or even fail. With the title method, the key is only checked at
-                   the beginning of each title, so it will not work if the key
-                   changes in the middle of a title.
-          'disc':  The disc key is cracked first. Afterwards all title keys can be
-                   decrypted instantly, which allows checking them often.
-          'key':   The same as the "disc" method if you do not have a file with player
-                   keys at compile time. If you do, disc key decryption will be faster.
-                   This is the default method also employed by libdvdcss.
+        - unset: Unset/Remove/Reset the cracking mode.
+        - title: By default the decrypted title key is guessed from the encrypted
+          sectors of the stream. Thus it should work with a file as well as
+          the DVD device. But decrypting a title key may take too much time
+          or even fail. With the title method, the key is only checked at
+          the beginning of each title, so it will not work if the key
+          changes in the middle of a title.
+        - disc: The disc key is cracked first. Afterwards all title keys can be
+          decrypted instantly, which allows checking them often.
+        - key: The same as the "disc" method if you do not have a file with player
+          keys at compile time. If you do, disc key decryption will be faster.
+          This is the default method also employed by libdvdcss.
 
         Returns the now current value of DVDCSS_METHOD, expected value should be
         the same as the mode string provided.
