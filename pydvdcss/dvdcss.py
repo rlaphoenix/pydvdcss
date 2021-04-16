@@ -2,6 +2,7 @@ import os
 import platform
 from ctypes import CFUNCTYPE, c_void_p, c_int, c_char_p, CDLL, create_string_buffer
 from ctypes.util import find_library
+from pathlib import Path
 from typing import Optional
 
 
@@ -103,6 +104,10 @@ class DvdCss:
         for dll_name in dlls:
             dll = find_library(dll_name)
             if dll:
+                break
+            dll = str((Path(__file__).parent.parent / dll_name).with_suffix(".dll"))
+            print(dll)
+            if os.path.exists(dll):
                 break
         if not dll:
             return None
