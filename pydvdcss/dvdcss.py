@@ -148,6 +148,9 @@ class DvdCss:
         if self.handle is not None:
             raise ValueError("DvdCss.open: A DVD is already open in this instance.")
         self.handle = self._open(psz_target.encode())
+        if self.handle == 0:
+            self.handle = None
+            return -1
         return self.handle
 
     def close(self) -> bool:
