@@ -203,7 +203,10 @@ class DvdCss:
         # noinspection PyBroadException
         try:
             self.buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
-            return self._read(self.handle, self.buffer, i_blocks, i_flags)
+            self.read = self._read(self.handle, self.buffer, i_blocks, i_flags)
+            if self.read < 0:
+                raise IOError("DvdCss.read: An error occurred while reading: %s" % self.error())
+            return self.read
         except Exception:
             # ensure the buffer is always correct and up to date data, not archaic
             # data from older successful reads
