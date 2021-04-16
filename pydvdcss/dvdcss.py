@@ -77,7 +77,6 @@ class DvdCss:
     def __init__(self):
         self.handle = None  # libdvdcss device handle
         self.buffer = None  # buffer for read()
-        self.buffer_len = 0  # length of self.buffer since we wont be able to len check it
 
         self._library = self._load_library()
         if not self._library:
@@ -114,7 +113,6 @@ class DvdCss:
 
     def dispose(self):
         self.buffer = None
-        self.buffer_len = 0
         """
         Closes any open disc and frees all data stored in this instance.
         It also unsets the libdvdcss verbosity and cracking mode.
@@ -168,7 +166,6 @@ class DvdCss:
                 raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
         self.handle = None
         self.buffer = None
-        self.buffer_len = 0
         return True
 
     def seek(self, i_blocks: int, i_flags: int = NO_FLAGS) -> int:
@@ -203,10 +200,8 @@ class DvdCss:
         Returns the amount of blocks read, or a negative value if an error
         occurred.
         """
-        if self.buffer_len != i_blocks:
-            # the current ctypes buffer won't fit the data, resize it
             self.buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
-            self.buffer_len = i_blocks
+        self.buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
         return self._read(self.handle, self.buffer, i_blocks, i_flags)
 
     # def readv(self, p_iovec, i_blocks, i_flags):
