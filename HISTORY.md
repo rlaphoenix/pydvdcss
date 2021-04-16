@@ -1,5 +1,13 @@
 # Release History
 
+## 1.3.1
+
+**Fixes**
+
+- get_library: Fix possible dll check exists error. If no dlls were found, then the local dll path string would be
+  what DLL ultimately becomes after the for each loop. Meaning the next `if not dll` check wouldnt be true, and would
+  think that DLL was actually found.
+
 ## 1.3.0
 
 **Fixes**
