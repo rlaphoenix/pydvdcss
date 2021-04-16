@@ -205,7 +205,7 @@ class DvdCss:
         """
         if self.buffer_len != i_blocks:
             # the current ctypes buffer won't fit the data, resize it
-            self.buffer = create_string_buffer(i_blocks * self.SECTOR_SIZE)
+            self.buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
             self.buffer_len = i_blocks
         return self._read(self.handle, self.buffer, i_blocks, i_flags)
 
