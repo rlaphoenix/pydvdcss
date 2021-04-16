@@ -106,10 +106,7 @@ class DvdCss:
                 break
         if not dll:
             return None
-        try:
-            return CDLL(dll)
-        except OSError:
-            return None
+        return CDLL(dll)
 
     def dispose(self):
         self.buffer = None
