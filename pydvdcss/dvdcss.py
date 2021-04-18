@@ -76,20 +76,20 @@ class DvdCss:
 
     @staticmethod
     def _load_library() -> CDLL:
-        """Load dvdcss DLL library via ctypes CDLL if available."""
-        dlls = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
-        dll = None
-        for dll_name in dlls:
-            dll = find_library(dll_name)
-            if dll:
+        """Load libdvdcss DLL/SO library via ctypes CDLL if available."""
+        names = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
+        lib = None
+        for name in names:
+            lib = find_library(name)
+            if lib:
                 break
-            local_path = (Path(__file__).parent.parent / dll_name).with_suffix(".dll")
-            if local_path.exists():
-                dll = str(local_path)
+            local_path = Path(__file__).parent.parent / name
+            if local_path.with_suffix(".dll").exists() or local_path.with_suffix(".so").exists():
+                lib = str(local_path)
                 break
-        if not dll:
+        if not lib:
             raise exceptions.LibDvdCssNotFound(_installation())
-        return CDLL(dll)
+        return CDLL(lib)
 
     def dispose(self):
         """
