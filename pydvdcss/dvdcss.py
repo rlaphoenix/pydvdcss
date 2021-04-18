@@ -3,18 +3,19 @@ import os
 from ctypes import CFUNCTYPE, c_void_p, c_int, c_char_p, CDLL, create_string_buffer
 from ctypes.util import find_library
 from pathlib import Path
-from typing import Optional
+
+from pydvdcss import exceptions
 
 
 def _installation():
-    """Raise dvdcss DLL library installation instructions."""
-    raise EnvironmentError(inspect.cleandoc("""
+    """Return brief libdvdcss dll/so library installation instructions."""
+    return inspect.cleandoc("""
     Unable to locate the libdvdcss library. PyDvdCss cannot install this for you.
     On Linux check your distribution's repositories. On Mac use brew (brew.sh) `brew install libdvdcss`.
     
     On Windows you can download a pre-compiled DLL at git.io/libdvdcss-dll and once downloaded install it
     by placing it in your Current Working Directory or C:/Windows/System32 (even if on 64bit Windows).
-    """))
+    """)
 
 
 class DvdCss:
@@ -59,8 +60,6 @@ class DvdCss:
         self.handle = None  # libdvdcss device handle
 
         self._library = self._load_library()
-        if not self._library:
-            _installation()
 
         self._open = CFUNCTYPE(c_void_p, c_char_p)(("dvdcss_open", self._library))
         self._close = CFUNCTYPE(c_int, c_void_p)(("dvdcss_close", self._library))
@@ -76,7 +75,7 @@ class DvdCss:
         self.dispose()
 
     @staticmethod
-    def _load_library() -> Optional[CDLL]:
+    def _load_library() -> CDLL:
         """Load dvdcss DLL library via ctypes CDLL if available."""
         dlls = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
         dll = None
@@ -89,7 +88,7 @@ class DvdCss:
                 dll = str(local_path)
                 break
         if not dll:
-            return None
+            raise exceptions.LibDvdCssNotFound(_installation())
         return CDLL(dll)
 
     def dispose(self):
