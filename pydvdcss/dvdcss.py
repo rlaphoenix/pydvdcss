@@ -1,6 +1,6 @@
 import inspect
 import os
-from ctypes import CFUNCTYPE, c_void_p, c_int, c_char_p, CDLL, create_string_buffer
+from ctypes import c_void_p, c_int, c_char_p, CDLL, create_string_buffer
 from ctypes.util import find_library
 from pathlib import Path
 
@@ -61,13 +61,6 @@ class DvdCss:
 
         self._library = self._load_library()
 
-        self._open = CFUNCTYPE(c_void_p, c_char_p)(("dvdcss_open", self._library))
-        self._close = CFUNCTYPE(c_int, c_void_p)(("dvdcss_close", self._library))
-        self._seek = CFUNCTYPE(c_int, c_void_p, c_int, c_int)(("dvdcss_seek", self._library))
-        self._read = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int, c_int)(("dvdcss_read", self._library))
-        self._error = CFUNCTYPE(c_int, c_void_p)(("dvdcss_error", self._library))
-        self._is_scrambled = CFUNCTYPE(c_int, c_void_p)(("dvdcss_is_scrambled", self._library))
-
     def __enter__(self):
         return self
 
@@ -75,7 +68,21 @@ class DvdCss:
         self.dispose()
 
     @staticmethod
-    def _load_library() -> CDLL:
+    def _define_library(lib: CDLL):
+        lib.dvdcss_open.argtypes = [c_char_p]
+        lib.dvdcss_open.restype = c_void_p
+        lib.dvdcss_close.argtypes = [c_void_p]
+        lib.dvdcss_close.restype = c_int
+        lib.dvdcss_seek.argtypes = [c_void_p, c_int, c_int]
+        lib.dvdcss_seek.restype = c_int
+        lib.dvdcss_read.argtypes = [c_void_p, c_char_p, c_int, c_int]
+        lib.dvdcss_read.restype = c_int
+        lib.dvdcss_error.argtypes = [c_void_p]
+        lib.dvdcss_error.restype = c_int
+        lib.dvdcss_is_scrambled.argtypes = [c_void_p]
+        lib.dvdcss_is_scrambled.restype = c_int
+
+    def _load_library(self) -> CDLL:
         """Load libdvdcss DLL/SO library via ctypes CDLL if available."""
         names = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
         lib = None
@@ -89,7 +96,9 @@ class DvdCss:
                 break
         if not lib:
             raise exceptions.LibDvdCssNotFound(_installation())
-        return CDLL(lib)
+        lib = CDLL(lib)
+        self._define_library(lib)
+        return lib
 
     def dispose(self):
         """
@@ -125,7 +134,7 @@ class DvdCss:
         """
         if self.handle is not None:
             raise ValueError("DvdCss.open: A DVD is already open in this instance.")
-        self.handle = self._open(psz_target.encode())
+        self.handle = self._library.dvdcss_open(psz_target.encode())
         if self.handle == 0:
             self.handle = None
             return -1
@@ -140,7 +149,7 @@ class DvdCss:
         if you don't intend to open another disc in the same instance.
         """
         if self.handle is not None:
-            ret = self._close(self.handle)
+            ret = self._library.dvdcss_close(self.handle)
             if ret != 0:
                 raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
         self.handle = None
@@ -163,7 +172,7 @@ class DvdCss:
           in VOB data sectors, however it will be unnecessary and cause slowdowns.
 
         """
-        return self._seek(self.handle, i_blocks, i_flags)
+        return self._library.dvdcss_seek(self.handle, i_blocks, i_flags)
 
     def read(self, i_blocks: int, i_flags: int = NO_FLAGS) -> bytes:
         """
@@ -176,7 +185,7 @@ class DvdCss:
         Returns the read logical blocks, or raises an IOError if a reading error occurs.
         """
         buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
-        read = self._read(self.handle, buffer, i_blocks, i_flags)
+        read = self._library.dvdcss_read(self.handle, buffer, i_blocks, i_flags)
         if read < 0:
             raise IOError("DvdCss.read: An error occurred while reading: %s" % self.error())
         return buffer.raw[:read * self.SECTOR_SIZE]
@@ -187,11 +196,11 @@ class DvdCss:
 
     def error(self) -> str:
         """Returns the latest error that occurred in the given libdvdcss instance."""
-        return self._error(self.handle).rstrip()
+        return self._library.dvdcss_error(self.handle).rstrip()
 
     def is_scrambled(self) -> bool:
         """Check if the disc is scrambled."""
-        return self._is_scrambled(self.handle) == 1
+        return self._library.dvdcss_is_scrambled(self.handle) == 1
 
     @staticmethod
     def set_verbosity(verbosity: int = 0) -> int:
