@@ -1,5 +1,5 @@
+import inspect
 import os
-import platform
 from ctypes import CFUNCTYPE, c_void_p, c_int, c_char_p, CDLL, create_string_buffer
 from ctypes.util import find_library
 from pathlib import Path
@@ -8,32 +8,13 @@ from typing import Optional
 
 def _installation():
     """Raise dvdcss DLL library installation instructions."""
-    err = "PyDvdCss: Unable to locate libdvdcss library, please install it.\n"
-    if platform.system() == "Windows":
-        err += "\n".join([
-            "On Windows, the installation process is a bit annoying, so I calculated it all for you:",
-            "Find or compile the latest libdvdcss DLL for Windows, then place the file in:",
-            "`C:/Windows/%s`" % ("SysWOW64" if platform.machine().endswith("64") else "System32"),
-            "Done!"
-        ])
-    elif platform.system() == "Darwin":
-        err += "\n".join([
-            "On Mac, the installation process is easiest when using `brew`.",
-            "If you don't have brew installed, follow the instructions at `https://brew.sh`",
-            "Once installed, open terminal and type: `brew install libdvdcss`",
-            "Done!"
-        ])
-    elif platform.system() == "Linux":
-        err += "\n".join([
-            "On Linux, the installation process is very simple.",
-            "Just check your Package Distribution for `libdvdcss`.",
-            "If it's not found, check it's User Repository or compile it yourself.",
-            "If you compile it yourself, make sure it's somewhere in PATH for pydvdcss to find it.",
-            "pydvdcss uses ctypes.util.find_library to search for the library.",
-            "It uses `/sbin/ldconfig`, `gcc`, `objdump` and `ld` to try find the library.",
-            "Good luck!"
-        ])
-    raise EnvironmentError(err)
+    raise EnvironmentError(inspect.cleandoc("""
+    Unable to locate the libdvdcss library. PyDvdCss cannot install this for you.
+    On Linux check your distribution's repositories. On Mac use brew (brew.sh) `brew install libdvdcss`.
+    
+    On Windows you can download a pre-compiled DLL at git.io/libdvdcss-dll and once downloaded install it
+    by placing it in your Current Working Directory or C:/Windows/System32 (even if on 64bit Windows).
+    """))
 
 
 class DvdCss:
