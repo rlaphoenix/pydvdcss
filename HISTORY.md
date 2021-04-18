@@ -1,5 +1,20 @@
 # Release History
 
+## 1.3.2
+
+**Fixes**
+
+- Add .so to the local path check, not just .dll.
+
+**Improvements**
+
+- Raise custom exception if libdvdcss shared object file (dll/so) is not found, instead of a regular Exception.
+  This allows you to catch that specific exception to handle it yourself if you so wish.
+- Condense the libdvdcss installation instruction information to the basics. If the basics aren't enough, the
+  user should just Google it at that point.
+- Define library prototypes directly instead of opening CFUNCTYPE functions. This reduces the amount of objects
+  and memory used up by each DvdCss() object, but also improves the general UX of operating with the library.
+
 ## 1.3.1
 
 **Fixes**
