@@ -1,6 +1,6 @@
 import inspect
 import os
-from ctypes import c_void_p, c_int, c_char_p, CDLL, create_string_buffer
+from ctypes import c_void_p, c_int, c_char_p, CDLL, create_string_buffer, Structure, CFUNCTYPE, c_uint64
 from ctypes.util import find_library
 from pathlib import Path
 
@@ -16,6 +16,21 @@ def _installation():
     On Windows you can download a pre-compiled DLL at git.io/libdvdcss-dll and once downloaded install it
     by placing it in your Current Working Directory or C:/Windows/System32 (even if on 64bit Windows).
     """)
+
+
+pf_seek = CFUNCTYPE(c_int, c_void_p, c_uint64)
+pf_read = CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)
+pf_readv = CFUNCTYPE(c_int, c_void_p, c_void_p, c_int)
+
+
+class DvdCssStreamCb(Structure):
+    """Creates a struct to match dvdcss_stream_cb."""
+
+    _fields_ = [
+        ("pf_seek", pf_seek),
+        ("pf_read", pf_read),
+        ("pf_readv", pf_readv)
+    ]
 
 
 class DvdCss:
