@@ -1,0 +1,41 @@
+name: cd
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  tagged-release:
+    name: Tagged Release
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11.x"
+    - name: Install Poetry
+      uses: abatilo/actions-poetry@v2
+      with:
+        poetry-version: 1.6.1
+    - name: Install project
+      run: poetry install --no-dev
+    - name: Build project
+      run: poetry build
+    - name: Upload wheel
+      uses: actions/upload-artifact@v3
+      with:
+        name: Python Wheel
+        path: "dist/*.whl"
+    - name: Deploy release
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        prerelease: false
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        files: |
+          dist/*.whl
+    - name: Publish to PyPI
+      env:
+        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+      run: poetry publish

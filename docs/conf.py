@@ -2,7 +2,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 from datetime import datetime
 
-from dunamai import Version, Style
+from dunamai import Style, Version
 
 # -- Project information -----------------------------------------------------
 

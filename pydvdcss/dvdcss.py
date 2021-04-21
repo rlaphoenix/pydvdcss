@@ -1,18 +1,21 @@
+from __future__ import annotations
+
 import inspect
 import os
-from ctypes import c_void_p, c_int, c_char_p, CDLL, create_string_buffer, Structure, CFUNCTYPE, c_uint64
+from ctypes import CDLL, CFUNCTYPE, Structure, c_char_p, c_int, c_uint64, c_void_p, create_string_buffer
 from ctypes.util import find_library
 from pathlib import Path
+from typing import Any, Literal, Optional
 
 from pydvdcss import exceptions
 
 
-def _installation():
+def _installation() -> str:
     """Return brief libdvdcss dll/so library installation instructions."""
     return inspect.cleandoc("""
     Unable to locate the libdvdcss library. PyDvdCss cannot install this for you.
     On Linux check your distribution's repositories. On Mac use brew (brew.sh) `brew install libdvdcss`.
-    
+
     On Windows you can download a pre-compiled DLL at git.io/libdvdcss-dll and once downloaded install it
     by placing it in your Current Working Directory or C:/Windows/System32 (even if on 64bit Windows).
     """)
@@ -71,19 +74,19 @@ class DvdCss:
         3: "SEEK_KEY & SEEK_MPEG"
     }
 
-    def __init__(self):
-        self.handle = None  # libdvdcss device handle
+    def __init__(self) -> None:
+        self.handle: Optional[int] = None  # libdvdcss device handle
 
         self._library = self._load_library()
 
-    def __enter__(self):
+    def __enter__(self) -> DvdCss:
         return self
 
-    def __exit__(self, *_, **kwargs):
+    def __exit__(self, *_: Any, **__: Any) -> None:
         self.dispose()
 
     @staticmethod
-    def _define_library(lib: CDLL):
+    def _define_library(lib: CDLL) -> None:
         lib.dvdcss_open.argtypes = [c_char_p]
         lib.dvdcss_open.restype = c_void_p
         lib.dvdcss_open_stream.argtypes = [c_void_p, DvdCssStreamCb]
@@ -102,22 +105,22 @@ class DvdCss:
     def _load_library(self) -> CDLL:
         """Load libdvdcss DLL/SO library via ctypes CDLL if available."""
         names = ["dvdcss", "dvdcss2", "libdvdcss", "libdvdcss2", "libdvdcss-2"]
-        lib = None
+        lib_name = None
         for name in names:
-            lib = find_library(name)
-            if lib:
+            lib_name = find_library(name)
+            if lib_name:
                 break
             local_path = Path(__file__).parent.parent / name
             if local_path.with_suffix(".dll").exists() or local_path.with_suffix(".so").exists():
-                lib = str(local_path)
+                lib_name = str(local_path)
                 break
-        if not lib:
+        if not lib_name:
             raise exceptions.LibDvdCssNotFound(_installation())
-        lib = CDLL(lib)
+        lib = CDLL(lib_name)
         self._define_library(lib)
         return lib
 
-    def dispose(self):
+    def dispose(self) -> None:
         """
         Closes any open disc and frees all data stored in this instance.
         It also unsets the libdvdcss verbosity and cracking mode.
@@ -157,7 +160,7 @@ class DvdCss:
             return -1
         return self.handle
 
-    def open_stream(self, p_stream: int, p_stream_cb: DvdCssStreamCb):
+    def open_stream(self, p_stream: int, p_stream_cb: DvdCssStreamCb) -> int:
         """
         Open a DVD device using custom read and seek functions.
 
@@ -195,7 +198,7 @@ class DvdCss:
         if self.handle is not None:
             ret = self._library.dvdcss_close(self.handle)
             if ret != 0:
-                raise ValueError("DvdCss.close: Failed to close device handle: %s" % self.error())
+                raise ValueError(f"DvdCss.close: Failed to close device handle: {self.error()}")
         self.handle = None
         return True
 
@@ -231,7 +234,7 @@ class DvdCss:
         buffer = create_string_buffer(b'', i_blocks * self.SECTOR_SIZE)
         read = self._library.dvdcss_read(self.handle, buffer, i_blocks, i_flags)
         if read < 0:
-            raise IOError("DvdCss.read: An error occurred while reading: %s" % self.error())
+            raise IOError(f"DvdCss.read: An error occurred while reading: {self.error()}")
         return buffer.raw[:read * self.SECTOR_SIZE]
 
     # def readv(self, p_iovec, i_blocks, i_flags):
@@ -266,7 +269,7 @@ class DvdCss:
         return int(os.environ["DVDCSS_VERBOSE"])
 
     @staticmethod
-    def set_cracking_mode(mode="key"):
+    def set_cracking_mode(mode: Literal["unset", "title", "disc", "key"] = "key") -> Optional[str]:
         """
         Set libdvdcss cracking mode (DVDCSS_METHOD environment variable).
 
