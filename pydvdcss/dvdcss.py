@@ -86,6 +86,8 @@ class DvdCss:
     def _define_library(lib: CDLL):
         lib.dvdcss_open.argtypes = [c_char_p]
         lib.dvdcss_open.restype = c_void_p
+        lib.dvdcss_open_stream.argtypes = [c_void_p, DvdCssStreamCb]
+        lib.dvdcss_open_stream.restype = c_void_p
         lib.dvdcss_close.argtypes = [c_void_p]
         lib.dvdcss_close.restype = c_int
         lib.dvdcss_seek.argtypes = [c_void_p, c_int, c_int]
@@ -150,6 +152,33 @@ class DvdCss:
         if self.handle is not None:
             raise ValueError("DvdCss.open: A DVD is already open in this instance.")
         self.handle = self._library.dvdcss_open(psz_target.encode())
+        if self.handle == 0:
+            self.handle = None
+            return -1
+        return self.handle
+
+    def open_stream(self, p_stream: int, p_stream_cb: DvdCssStreamCb):
+        """
+        Open a DVD device using custom read and seek functions.
+
+        Essentially instead of having libdvdcss read from a target device,
+        you provide it functions that does the reading and seeking yourself.
+
+        Note: I have yet to actually get this to work. I don't know if I'm
+        doing something wrong in terms of ctypes definitions or something
+        else, but the definitions seem correct. Perhaps p_stream is used in
+        a way that I don't yet understand.
+
+        Parameters:
+            p_stream: A private handle used by p_stream_cb.
+            p_stream_cb: A struct containing seek and read functions.
+
+        Returns a handle to be used for all subsequent libdvdcss calls.
+        If an error occurred, NULL is returned.
+        """
+        if self.handle is not None:
+            raise ValueError("DvdCss.open: A DVD is already open in this instance.")
+        self.handle = self._library.dvdcss_open_stream(p_stream, p_stream_cb)
         if self.handle == 0:
             self.handle = None
             return -1
