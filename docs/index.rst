@@ -62,3 +62,4 @@ Pages
    installation
    api
    todo
+   history
