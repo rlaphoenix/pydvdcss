@@ -25,7 +25,7 @@ author = 'PHOENiX'
 
 # The full version, including alpha/beta/rc tags
 version = Version.from_git().serialize(style=Style.SemVer)
-release = version
+release = Version.from_git().base
 
 
 # -- General configuration ---------------------------------------------------
