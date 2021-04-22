@@ -25,10 +25,11 @@ include = ["LICENSE", "README.md", "HISTORY.md"]
 [tool.poetry.dependencies]
 python = ">=3.6,<4.0"
 poetry-dynamic-versioning = "^0.12.4"
+Sphinx = {version = "^3.5.4", optional = true}
+sphinx-rtd-theme = {version = "^0.5.2", optional = true}
 
-[tool.poetry.dev-dependencies]
-Sphinx = "^3.5.4"
-sphinx-rtd-theme = "^0.5.2"
+[tool.poetry.extras]
+docs = ["Sphinx", "sphinx-rtd-theme"]
 
 [tool.poetry-dynamic-versioning]
 enable = true
