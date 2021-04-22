@@ -4,7 +4,7 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-from dunamai import Version
+from dunamai import Version, Style
 
 # -- Path setup --------------------------------------------------------------
 
@@ -24,7 +24,7 @@ copyright = '2021, PHOENiX'
 author = 'PHOENiX'
 
 # The full version, including alpha/beta/rc tags
-version = Version.from_git().base
+version = Version.from_git().serialize(style=Style.SemVer)
 release = version
 
 
