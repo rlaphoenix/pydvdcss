@@ -55,9 +55,7 @@ strong.command {
 }
 
 .sidebar-brand,
-.sidebar-versions,
-.sidebar-search,
-.github-buttons {
+.sidebar-search {
   box-sizing: border-box;
   width: calc(var(--sidebar-width) - 2 * var(--sidebar-scrollbar-width)) !important;
   margin-left: var(--sidebar-scrollbar-width) !important;
@@ -82,35 +80,10 @@ strong.command {
   margin: 0;
 }
 
-.sidebar-versions {
-  margin: .5rem 0;
-}
-.sidebar-versions a {
+.sidebar-version {
   color: inherit;
-}
-.sidebar-versions-current {
   font-family: var(--font-stack--monospace);
   font-size: var(--font-size--small--2);
-}
-.sidebar-versions-others {
-  display: flex;
-  margin: .5rem 0 0;
-  font-size: var(--font-size--small);
-}
-.sidebar-versions-others dd {
-  width: 50%;
-  margin: 0;
-}
-.sidebar-versions-others dd:first-of-type {
-  padding-right: .5rem;
-  text-align: right;
-}
-.sidebar-versions-others dd:last-of-type {
-  padding-left: .5rem;
-  text-align: left;
-}
-.sidebar-versions-others .version-current {
-  font-weight: bold;
 }
 
 .sidebar-search-container {
@@ -125,10 +98,6 @@ strong.command {
     + var(--sidebar-search-icon-size)
     - var(--sidebar-scrollbar-width)
   );
-}
-
-.github-buttons {
-  margin: 1.5rem 0 1rem;
 }
 
 .toc-tree li.scroll-current > .reference {
@@ -185,20 +154,6 @@ table.table-custom-layout tbody tr td {
 }
 table.table-custom-layout tbody tr td:first-of-type {
   vertical-align: top;
-}
-
-/*
-  Content
-*/
-
-.github-avatar {
-  float: left;
-  width: 150px;
-  height: 150px;
-  margin: 0 1rem 1rem 0;
-}
-.github-avatar + .container > ul > li {
-  list-style: none;
 }
 
 /*

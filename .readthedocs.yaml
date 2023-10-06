@@ -1,9 +1,21 @@
 version: 2
 
-python:
-  version: 3.8
-  install:
-    - method: pip
-      path: .
-      extra_requirements:
-        - docs
+build:
+  os: ubuntu-22.04
+  tools: {python: "3.11"}
+  jobs:
+    post_checkout:
+      - git fetch --unshallow
+    pre_create_environment:
+      - asdf plugin add poetry
+      - asdf install poetry latest
+      - asdf global poetry latest
+      - poetry config virtualenvs.create false
+    post_install:
+      # Ideally we could run `poetry install --only main -E docs`, However,
+      # for some reason the sphinx build call is unable to find anything it installed.
+      # So for now just export as requirements.txt and install them that way.
+      - poetry self add poetry-plugin-export
+      - poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev -E docs
+      - pip install -r requirements.txt
+      - pip install . --no-deps
