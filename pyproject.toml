@@ -50,15 +50,9 @@ pre-commit = "^3.4.0"
 docs = ["Sphinx", "dunamai", "furo", "myst-parser"]
 
 [tool.ruff]
-exclude = [
-    ".venv",
-    "build",
-    "dist",
-    "*_pb2.py",
-    "*.pyi",
-]
-ignore = []
 line-length = 120
+
+[tool.ruff.lint]
 select = ["E", "F", "W"]
 
 [tool.isort]
