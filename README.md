@@ -1,4 +1,4 @@
-![Banner](https://rawcdn.githack.com/rlaphoenix/pydvdcss/dfea6bed42cf13cb9d5839ddc1c54f4efbc5ec5e/banner.png)
+![Banner](banner.png)
 
 [![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Dependency management: Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
