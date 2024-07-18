@@ -13,19 +13,19 @@ repository = "https://github.com/rlaphoenix/pydvdcss"
 documentation = "https://pydvdcss.readthedocs.io"
 keywords = ["python", "library", "dvd", "videolan", "libdvdcss"]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
-    "Intended Audience :: Developers",
-    "Natural Language :: English",
-    "Operating System :: OS Independent",
-    "Topic :: Multimedia",
-    "Topic :: Multimedia :: Video",
-    "Topic :: Multimedia :: Video :: Conversion",
-    'Topic :: Security :: Cryptography',
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Topic :: Multimedia",
+  "Topic :: Multimedia :: Video",
+  "Topic :: Multimedia :: Video :: Conversion",
+  "Topic :: Security :: Cryptography",
 ]
 include = [
-    { path = "CHANGELOG.md", format = "sdist" },
-    { path = "README.md", format = "sdist" },
-    { path = "LICENSE", format = "sdist" },
+  { path = "CHANGELOG.md", format = "sdist" },
+  { path = "README.md", format = "sdist" },
+  { path = "LICENSE", format = "sdist" },
 ]
 
 [tool.poetry.urls]
@@ -62,6 +62,6 @@ line_length = 120
 check_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
-follow_imports = 'silent'
+follow_imports = "silent"
 ignore_missing_imports = true
 no_implicit_optional = true
