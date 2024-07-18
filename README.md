@@ -15,5 +15,5 @@ decryption.
 
   [libdvdcss]: <https://www.videolan.org/developers/libdvdcss.html>
 
-**Documentation**: https://pydvdcss.phoeniix.dev  
+**Documentation**: https://pydvdcss.readthedocs.io  
 **License**: [GNU General Public License, Version 3.0](LICENSE)

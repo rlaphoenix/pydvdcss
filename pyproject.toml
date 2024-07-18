@@ -10,7 +10,7 @@ license = "GPLv3"
 authors = ["rlaphoenix <rlaphoenix@pm.me>"]
 readme = "README.md"
 repository = "https://github.com/rlaphoenix/pydvdcss"
-documentation = "https://pydvdcss.phoeniix.dev"
+documentation = "https://pydvdcss.readthedocs.io"
 keywords = ["python", "library", "dvd", "videolan", "libdvdcss"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
