@@ -5,20 +5,97 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+This version is all about improving the UX and upgrading it's tooling. Support for
+Python 3.8 has been dropped, but 3.12 is now supported. Unfortunately this means
+dropping support for Windows 7/8/8.1 as well. This was more or less necessary to keep
+up with the latest versions of other dependencies as well as crucial bug fixes.
+
+### Fixed
+
+- Various CI and linting tooling mistakes and made it more efficient.
+- Fixed unsetting of verbosity and cracking modes on Windows systems by requiring
+  Python 3.9 or newer as the `os.unsetenv` function only existed on other operating
+  systems before then.
+- Fixed value comparison used when unsetting cracking mode to "unset" string, not
+  `-1` integer.
+
+### Changed
+
+- Various doc-strings were improved and made more clear in various ways.
+- Most PyDvdCss-inherited exceptions now try to call `DvdCss.error()` for you to
+  include potentially useful error information when the errors happen. Though, Errors
+  from the library are not always available.
+- The base exception `PyDvdCssException` was renamed to `PyDvdCssError`.
+- The exception `LibDvdCssNotFound` was renamed to `LibraryNotFoundError`.
+- `DvdCss.close()` now only returns True if a device was actually closed when called.
+- `DvdCss.set_verbosity()` has been renamed to `DvdCss.set_verbosity_level()`.
+- `DvdCss.error()` is now a property, via `@property` decorator.
+- `DvdCss.error` will now return None if no DVD device or directory was opened yet.
+- `DvdCss.error` may now return None if there is no error string to return, or if
+  the error string is falsey (basically empty).
+- `DvdCss.error` now does whitespace stripping on both the left and right instead
+  of just the right.
+- `DvdCss.is_scrambled()` is now a property, via `@property` decorator.
+- `DvdCss.is_scrambled` will now return False if no DVD device or directory was opened yet.
+- `DvdCss.open()` changed parameter names from `psz_target` to `target`.
+- `DvdCss.seek()` changed parameter names from `i_blocks` to `sector` and `i_flags` to
+  `flag`.
+- `DvdCss.read()` changed parameter names from `i_blocks` to `sectors` and `i_flags` to
+  `flag`.
+- `DvdCss.set_verbosity_level()` changed parameter names from `verbosity` to `level`.
+- `DvdCss.seek()` now uses a `SeekFlag` enum for the `flag` parameter instead of an
+  integer value. However, you can still use an int if you prefer.
+- `DvdCss.read()` now uses a `ReadFlag` enum for the `flag` parameter instead of an
+  integer value. However, you can still use an int if you prefer.
+- `DvdCss.set_verbosity_level()` now uses a `VerbosityLevel` enum for the `level` parameter
+  and return value instead of an integer value. However, you can still pass an int if
+  you prefer.
+- `DvdCss.set_cracking_mode()` now uses a `CrackingMode` enum for the `mode` parameter
+  and return value instead of a string value. However, you can still pass a string if
+  you prefer.
+- `DvdCss.open()` and `DvdCss.open_stream()` now raises an `AlreadyInUseError` exception
+  instead of a `ValueError` when you try to open a 2nd disc in the same class instance.
+- `DvdCss.open()` and `DvdCss.open_stream()` now raises an `OpenFailureError` exception
+  instead of returning -1 on failure to open and initialize the device or directory.
+- `DvdCss.seek()` and `DvdCss.read()` now raises a `NoDeviceError` exception when called
+  if no DVD device or directory was opened yet.
+- `DvdCss.seek()` now raises a `SeekError` exception instead of returning negative
+  numbers on seek failures.
+- `DvdCss.read()` now raises a `SeekError` exception instead of a negative integer when
+  it fails to seek.
+- `DvdCss.read()` now raises a `ReadError` exception instead of an `IOError` on failure
+  to read one or more sectors.
+- `DvdCss.close()` now raises a `CloseError` exception instead of a `ValueError` on
+  failure to close an open device or directory.
+- `DvdCss.dispose()` is now deprecated and an alias of `DvdCss.close()` and no longer
+  unsets the verbosity level or cracking mode environment variables. This is because
+  this is set in your environment, not per-instance. Its not logical to reset it when
+  it will affect every other instance running. Instead, pay close attention to your
+  instances and handle resetting the level/mode yourself.
+- The list of possible library names were put into constants as `LIBRARY_NAMES`.
+
+### Removed
+
+- The `SECTOR_SIZE`, `BLOCK_BUFFER`, `NO_FLAGS`, `READ_DECRYPT`, `SEEK_MPEG`,
+  `SEEK_KEY`, `flags_m`, and `flags_s` class variables were removed. The variables to
+  do with flags/read/seek were refactored as SeekFlag and ReadFlag.
+
 ## [1.4.0] - 2023-10-12
 
-## Added
+### Added
 
 - Added function `open_stream()` that calls the `dvdcss_open_stream` function of the libdvdcss library.
 - Defined `dvdcss_stream_cb`, `pf_seek`, `pf_read`, `pf_readv`, and `dvdcss_open_stream`.
 
-## Changed
+### Changed
 
 - Various structural and organisational changes to the repository, CI/CD, and more.
 - Updated dependencies as far as I could while keeping support for actively supported versions of Python.
 - Moved all documentation dependencies from dev to main group as optionals installed through the `docs` extra.
 
-## Removed
+### Removed
 
 - Dropped support for Python 3.5, 3.6, and 3.7. This is to have support for the latest dependency versions.
 - Removed all uses of poetry-dynamic-versioning as it's simply unnecessary.

@@ -24,7 +24,7 @@ Release v\ |version|. (:ref:`Installation <installation>`)
    >>> dvd = DvdCss()
    >>> dvd.open("D:")
    -1333389968
-   >>> dvd.is_scrambled()
+   >>> dvd.is_scrambled
    True
    >>> dvd.seek(16)
    16
@@ -35,8 +35,6 @@ Release v\ |version|. (:ref:`Installation <installation>`)
    >>> dvd.buffer[40:72]
    b'SPONGEBOB_SQUAREPANTS_D1\x00\x00...'
    >>> dvd.close()
-   True
-   >>> dvd.dispose()
    True
 
 libdvdcss (via pydvdcss) is a simple library designed for accessing DVDs like a
