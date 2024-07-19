@@ -44,26 +44,23 @@ docutils = {version = "0.20.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 ruff = "~0.5.3"
-isort = "^5.13.2"
 mypy = "^1.10.1"
 pre-commit = "^3.5.0"
 
 [tool.poetry.extras]
 docs = ["Sphinx", "dunamai", "furo", "myst-parser"]
 
-[tool.ruff]
-line-length = 120
-
 [tool.ruff.lint]
-select = ["E", "F", "W"]
-
-[tool.isort]
-line_length = 120
+extend-select = ["B", "C4", "E", "FA", "FURB", "I", "ICN", "ISC", "N", "PERF", "PGH", "PIE", "RUF", "SIM", "UP", "W"]
 
 [tool.mypy]
 check_untyped_defs = true
+disallow_any_generics = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true
 follow_imports = "silent"
 ignore_missing_imports = true
 no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_unused_ignores = true

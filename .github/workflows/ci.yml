@@ -12,35 +12,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version-file: pyproject.toml
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@v3
         with:
-          poetry-version: 1.6.1
+          poetry-version: 1.8.3
       - name: Install project
         run: poetry install
-      - name: Lint with ruff
-        run: poetry run ruff check .
-      - name: Check import order with isort
-        run: poetry run isort --check-only --diff .
-      - name: Check typing with mypy
-        run: poetry run mypy .
+      - name: Run pre-commit which does various checks
+        run: poetry run pre-commit run --all-files --show-diff-on-failure
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
-        poetry-version: [1.6.1]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        poetry-version: [1.8.3]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install poetry
-        uses: abatilo/actions-poetry@v2
+        uses: abatilo/actions-poetry@v3
         with:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Install project
