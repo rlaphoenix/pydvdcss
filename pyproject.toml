@@ -34,18 +34,16 @@ include = [
 "Changelog" = "https://github.com/rlaphoenix/pydvdcss/blob/master/CHANGELOG.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-Sphinx = {version = "^7.1.2", optional = true}
+python = "^3.9"
+Sphinx = {version = "^7.4.6", optional = true}
 dunamai = {version = "^1.21.2", optional = true}
 furo = {version = "^2024.7.18", optional = true}
 myst-parser = {version = "^3.0.1", optional = true}
-# only needed for myst-parser ^3, see https://github.com/python-poetry/poetry/issues/9293
-docutils = {version = "0.20.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 ruff = "~0.5.3"
 mypy = "^1.10.1"
-pre-commit = "^3.5.0"
+pre-commit = "^3.7.1"
 
 [tool.poetry.extras]
 docs = ["Sphinx", "dunamai", "furo", "myst-parser"]
