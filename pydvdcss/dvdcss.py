@@ -381,7 +381,12 @@ class DvdCss:
         """
         if self.handle is None:
             return None
-        return self._library.dvdcss_error(self.handle).strip() or None
+
+        error = self._library.dvdcss_error(self.handle)
+        if not error or error == b"no error":
+            return None
+
+        return error.decode("utf8").strip() or None
 
     @property
     def is_scrambled(self) -> bool:
@@ -417,21 +422,23 @@ class DvdCss:
             )
 
         lib = CDLL(lib_name)
+        dvdcss_t = c_void_p
+
         lib.dvdcss_open.argtypes = [c_char_p]
-        lib.dvdcss_open.restype = c_void_p
-        lib.dvdcss_open_stream.argtypes = [c_void_p, DvdCssStreamCb]
-        lib.dvdcss_open_stream.restype = c_void_p
-        lib.dvdcss_close.argtypes = [c_void_p]
+        lib.dvdcss_open.restype = dvdcss_t
+        lib.dvdcss_open_stream.argtypes = [dvdcss_t, DvdCssStreamCb]
+        lib.dvdcss_open_stream.restype = dvdcss_t
+        lib.dvdcss_close.argtypes = [dvdcss_t]
         lib.dvdcss_close.restype = c_int
-        lib.dvdcss_seek.argtypes = [c_void_p, c_int, c_int]
+        lib.dvdcss_seek.argtypes = [dvdcss_t, c_int, c_int]
         lib.dvdcss_seek.restype = c_int
-        lib.dvdcss_read.argtypes = [c_void_p, c_char_p, c_int, c_int]
+        lib.dvdcss_read.argtypes = [dvdcss_t, c_char_p, c_int, c_int]
         lib.dvdcss_read.restype = c_int
-        lib.dvdcss_readv.argtypes = [c_void_p, POINTER(Iovec), c_int, c_int]
+        lib.dvdcss_readv.argtypes = [dvdcss_t, POINTER(Iovec), c_int, c_int]
         lib.dvdcss_readv.restype = c_int
-        lib.dvdcss_error.argtypes = [c_void_p]
-        lib.dvdcss_error.restype = c_int
-        lib.dvdcss_is_scrambled.argtypes = [c_void_p]
+        lib.dvdcss_error.argtypes = [dvdcss_t]
+        lib.dvdcss_error.restype = c_char_p
+        lib.dvdcss_is_scrambled.argtypes = [dvdcss_t]
         lib.dvdcss_is_scrambled.restype = c_int
 
         return lib

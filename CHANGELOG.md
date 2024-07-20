@@ -22,6 +22,8 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
 ### Fixed
 
 - Various CI and linting tooling mistakes and made it more efficient.
+- `DvdCss.error()` (which is now `DvdCss.error` property) is now defined correctly and
+  now returns None or string values instead of a useless integer value.
 
 ### Changed
 
