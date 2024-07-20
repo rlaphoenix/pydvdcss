@@ -60,4 +60,4 @@ Pages
    installation
    api
    todo
-   history
+   changelog
