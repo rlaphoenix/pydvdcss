@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from ctypes import (
     CDLL,
+    POINTER,
+    Array,
+    c_char,
     c_char_p,
     c_int,
     c_void_p,
@@ -9,15 +12,17 @@ from ctypes import (
 )
 from ctypes.util import find_library
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from typing_extensions import deprecated
 
 from pydvdcss import constants, exceptions, types
 from pydvdcss.structs import (
     DvdCssStreamCb,
+    Iovec,
     ReadFlag,
     SeekFlag,
+    iovecs,
 )
 from pydvdcss.utilities import message_with_error
 
@@ -207,7 +212,7 @@ class DvdCss:
 
     def read(self, sectors: int, flag: types.ReadFlag_T = ReadFlag.Unset) -> bytes:
         """
-        Read from the DVD device or directory and decrypt data if requested.
+        Read from the DVD device or directory.
 
         The flag is used to indicate when the library should decrypt VOB data with it's
         CSS title key.
@@ -229,7 +234,7 @@ class DvdCss:
             NoDeviceError: No DVD device or directory is open yet.
             ReadError: Failure reading sectors, or returned data is less than expected.
 
-        Returns the read logical blocks, or raises an IOError if a reading error occurs.
+        Returns the read logical blocks.
         """
         if self.handle is None:
             raise exceptions.NoDeviceError(
@@ -275,9 +280,72 @@ class DvdCss:
 
         return data
 
-    # def readv(self, p_iovec, i_blocks, i_flags):
-    #   TODO: Implement readv, not sure how this would be used or implemented.
-    #         It's possible the need for readv via python is simply unnecessary.
+    def readv(
+        self, *buffers: Array[c_char], decrypt: bool | Literal[0, 1] = False
+    ) -> int:
+        """
+        Read from the DVD device or directory to multiple buffers.
+
+        You must seek to the start of each title and/or through VOB data sectors to
+        get the title keys necessary to descramble/decrypt CSS. This will NOT error
+        if you read a scrambled VOB sector with no title key to descramble with.
+        Generally, you should seek through the disc first to get the keys, then seek
+        back to the start and then begin reading.
+
+        Parameters:
+            buffers: Buffers to write to. Buffer lengths must be multiples of a sector
+                (2048 bytes).
+            decrypt: Whether to decrypt the read sectors, if encrypted. Only VOB data
+                sectors can be scrambled. It is safe to always use True.
+
+        Raises:
+            NoDeviceError: No DVD device or directory is open yet.
+            ReadError: Failure reading sectors, or returned data is less than expected.
+
+        Returns the read logical blocks within the buffers.
+        """
+        if self.handle is None:
+            raise exceptions.NoDeviceError(
+                "No DVD device or directory is open yet, use open() first."
+            )
+
+        unsupported_buffers = [
+            buffer for buffer in buffers if not isinstance(buffer, Array)
+        ]
+        if unsupported_buffers:
+            raise TypeError(
+                "Expected all buffers to be an Array[c_char], but at least one wasn't.",
+                unsupported_buffers,
+            )
+
+        if isinstance(decrypt, bool):
+            decrypt = 1 if decrypt else 0
+        elif decrypt not in (0, 1):
+            raise TypeError(
+                f"Expected decrypt to be a bool or int-bool, not {decrypt!r}"
+            )
+
+        buffer_len = sum(map(len, buffers))
+        if buffer_len % constants.SECTOR_SIZE != 0:
+            raise exceptions.PyDvdCssError(
+                f"Buffers must read a multiple of 1 sector "
+                f"({constants.SECTOR_SIZE} bytes), tried to read {buffer_len} bytes"
+            )
+
+        sectors = buffer_len // constants.SECTOR_SIZE
+
+        read_sectors = self._library.dvdcss_readv(
+            self.handle, iovecs(*buffers), sectors, decrypt
+        )
+        if read_sectors < sectors:
+            raise exceptions.ReadError(
+                message_with_error(
+                    f"Read {read_sectors} sectors, expected {sectors}",
+                    self.error,
+                )
+            )
+
+        return read_sectors
 
     def close(self) -> bool:
         """
@@ -359,6 +427,8 @@ class DvdCss:
         lib.dvdcss_seek.restype = c_int
         lib.dvdcss_read.argtypes = [c_void_p, c_char_p, c_int, c_int]
         lib.dvdcss_read.restype = c_int
+        lib.dvdcss_readv.argtypes = [c_void_p, POINTER(Iovec), c_int, c_int]
+        lib.dvdcss_readv.restype = c_int
         lib.dvdcss_error.argtypes = [c_void_p]
         lib.dvdcss_error.restype = c_int
         lib.dvdcss_is_scrambled.argtypes = [c_void_p]

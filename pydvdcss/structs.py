@@ -1,4 +1,14 @@
-from ctypes import CFUNCTYPE, Structure, c_char_p, c_int, c_uint64, c_void_p
+from ctypes import (
+    CFUNCTYPE,
+    Array,
+    Structure,
+    c_char,
+    c_char_p,
+    c_int,
+    c_uint64,
+    c_void_p,
+    cast,
+)
 from enum import Enum
 
 
@@ -14,6 +24,16 @@ class ReadFlag(Enum):
     Unset = 0
     READ_DECRYPT = 1
     """Decrypt the data it reads."""
+
+
+class Iovec(Structure):
+    _fields_ = (("iov_base", c_void_p), ("iov_len", c_int))
+
+
+def iovecs(*buffers: Array[c_char]) -> Array[Iovec]:
+    return (Iovec * len(buffers))(
+        *[Iovec(cast(buffer, c_void_p), len(buffer)) for buffer in buffers]
+    )
 
 
 class DvdCssStreamCb(Structure):

@@ -12,6 +12,13 @@ Python 3.8 has been dropped, but 3.12 is now supported. Unfortunately this means
 dropping support for Windows 7/8/8.1 as well. This was more or less necessary to keep
 up with the latest versions of other dependencies as well as crucial bug fixes.
 
+### Added
+
+- Implemented `libdvdcss.dvdcss_readv()` to `DvdCss.readv()`. Simply create buffers
+  using `create_string_buffer(b"", 2048)` and pass them as arguments. Read data will
+  go into the original buffers made. You can read the bytes from the `raw` property
+  of each string buffer.
+
 ### Fixed
 
 - Various CI and linting tooling mistakes and made it more efficient.
