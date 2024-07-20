@@ -34,6 +34,8 @@ templates_path = [
 # -- Builder options ---------------------------------------------------------
 
 html_theme = "furo"
+html_theme_options = {"sidebar_hide_name": True}
+html_logo = "_static/images/icon.png"
 html_css_files = [
     "styles/custom.css",
     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/fontawesome.min.css",
