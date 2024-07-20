@@ -61,3 +61,4 @@ Pages
    api
    todo
    changelog
+   license
