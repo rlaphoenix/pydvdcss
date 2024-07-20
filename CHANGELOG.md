@@ -15,11 +15,6 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
 ### Fixed
 
 - Various CI and linting tooling mistakes and made it more efficient.
-- Fixed unsetting of verbosity and cracking modes on Windows systems by requiring
-  Python 3.9 or newer as the `os.unsetenv` function only existed on other operating
-  systems before then.
-- Fixed value comparison used when unsetting cracking mode to "unset" string, not
-  `-1` integer.
 
 ### Changed
 
@@ -30,7 +25,6 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
 - The base exception `PyDvdCssException` was renamed to `PyDvdCssError`.
 - The exception `LibDvdCssNotFound` was renamed to `LibraryNotFoundError`.
 - `DvdCss.close()` now only returns True if a device was actually closed when called.
-- `DvdCss.set_verbosity()` has been renamed to `DvdCss.set_verbosity_level()`.
 - `DvdCss.error()` is now a property, via `@property` decorator.
 - `DvdCss.error` will now return None if no DVD device or directory was opened yet.
 - `DvdCss.error` may now return None if there is no error string to return, or if
@@ -44,17 +38,10 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
   `flag`.
 - `DvdCss.read()` changed parameter names from `i_blocks` to `sectors` and `i_flags` to
   `flag`.
-- `DvdCss.set_verbosity_level()` changed parameter names from `verbosity` to `level`.
 - `DvdCss.seek()` now uses a `SeekFlag` enum for the `flag` parameter instead of an
   integer value. However, you can still use an int if you prefer.
 - `DvdCss.read()` now uses a `ReadFlag` enum for the `flag` parameter instead of an
   integer value. However, you can still use an int if you prefer.
-- `DvdCss.set_verbosity_level()` now uses a `VerbosityLevel` enum for the `level` parameter
-  and return value instead of an integer value. However, you can still pass an int if
-  you prefer.
-- `DvdCss.set_cracking_mode()` now uses a `CrackingMode` enum for the `mode` parameter
-  and return value instead of a string value. However, you can still pass a string if
-  you prefer.
 - `DvdCss.open()` and `DvdCss.open_stream()` now raises an `AlreadyInUseError` exception
   instead of a `ValueError` when you try to open a 2nd disc in the same class instance.
 - `DvdCss.open()` and `DvdCss.open_stream()` now raises an `OpenFailureError` exception
@@ -71,9 +58,9 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
   failure to close an open device or directory.
 - `DvdCss.dispose()` is now deprecated and an alias of `DvdCss.close()` and no longer
   unsets the verbosity level or cracking mode environment variables. This is because
-  this is set in your environment, not per-instance. Its not logical to reset it when
-  it will affect every other instance running. Instead, pay close attention to your
-  instances and handle resetting the level/mode yourself.
+  it cant actually work (see Removed section), and even if it did it is set in your
+  environment, not per-instance. Its not logical to reset it when it will affect every
+  other instance running.
 - The list of possible library names were put into constants as `LIBRARY_NAMES`.
 
 ### Removed
@@ -81,6 +68,11 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
 - The `SECTOR_SIZE`, `BLOCK_BUFFER`, `NO_FLAGS`, `READ_DECRYPT`, `SEEK_MPEG`,
   `SEEK_KEY`, `flags_m`, and `flags_s` class variables were removed. The variables to
   do with flags/read/seek were refactored as SeekFlag and ReadFlag.
+- The `DvdCss.set_verbosity()` and `DvdCss.set_cracking_mode()` methods as it is not
+  actually possible to set the environment variable from Python in such a way for the
+  library to see the changes. I've tried manipulating os.environ, setx, py-setenv, and
+  pycrosskit. Nothing set it persistently for the current terminal/shell in such a way
+  without needing the terminal/shell to reload, making this method pointless.
 
 ## [1.4.0] - 2023-10-12
 

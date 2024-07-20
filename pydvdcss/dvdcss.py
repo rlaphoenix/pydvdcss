@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 from ctypes import (
     CDLL,
     c_char_p,
@@ -16,11 +15,9 @@ from typing_extensions import deprecated
 
 from pydvdcss import constants, exceptions, types
 from pydvdcss.structs import (
-    CrackingMode,
     DvdCssStreamCb,
     ReadFlag,
     SeekFlag,
-    VerbosityLevel,
 )
 from pydvdcss.utilities import message_with_error
 
@@ -34,11 +31,40 @@ class DvdCss:
     VLC, a full video client/server streaming solution. VLC can also be used as a
     standalone program to play video streams from a hard disk or a DVD.
 
-    The Environment Variables `DVDCSS_METHOD` and `DVDCSS_VERBOSE` are handled by
-    :func:`set_cracking_mode` and :func:`set_verbosity_level` respectively. See those
-    functions for more information.
-
     libdvdcss is copyright of VideoLAN and licensed under GNU General Public License.
+
+    Some environment variables can be used to change the behavior of libdvdcss:
+
+    Environment Variables:
+      DVDCSS_VERBOSE: Sets the verbosity level.
+        - 0 outputs no messages at all.
+        - 1 outputs error messages to stderr.
+        - 2 outputs error messages and debug messages to stderr.
+      DVDCSS_METHOD: Sets the authentication & decryption method to descramble discs.
+        - key is the default method. libdvdcss will use a set of calculated player keys
+          to try and get the disc key. This can fail if the drive does not recognize any
+          of the player keys.
+        - disc is a fallback method when key has failed. Instead of using player keys,
+          libdvdcss will crack the disc key using a brute force algorithm. This process
+          is CPU intensive and requires 64 MB of memory to store temporary data.
+        - title is the fallback when all other methods have failed. It does not rely on
+          a key exchange with the DVD drive, but rather uses a crypto attack to guess
+          the title key. In rare cases this may fail because there is not enough
+          encrypted data on the disc to perform a statistical attack, but on the other
+          hand it is the only way to decrypt a DVD stored on a hard disc, or a DVD with
+          the wrong region on an RPC2 drive.
+      DVDCSS_RAW_DEVICE: Specify the raw device to use. Exact usage will depend on
+        your operating system, the Linux utility to set up raw devices is raw(8) for
+        instance. Please note that on most operating systems, using a raw device
+        requires highly aligned buffers: Linux requires a 2048 bytes alignment (which
+        is the size of a DVD sector).
+      DVDCSS_CACHE: Specify a directory in which to cache title key values. This will
+        speed up descrambling of DVDs which are in the cache. The DVDCSS_CACHE directory
+        is created if it does not exist, and a subdirectory is created named after the
+        DVD's title or manufacturing date. If DVDCSS_CACHE is not set or is empty,
+        libdvdcss will use the default value which is "${HOME}/.dvdcss/" under Unix and
+        "C:/Documents and Settings/$USER/Application Data/dvdcss/" under Win32. The
+        special value "off" disables caching.
     """
 
     def __init__(self) -> None:
@@ -299,71 +325,6 @@ class DvdCss:
         if self.handle is None:
             return False
         return self._library.dvdcss_is_scrambled(self.handle) == 1
-
-    @staticmethod
-    def set_verbosity_level(
-        level: types.VerbosityLevel_T = VerbosityLevel.Nothing,
-    ) -> VerbosityLevel:
-        """
-        Set libdvdcss verbosity (DVDCSS_VERBOSE environment variable).
-
-        Parameters:
-            level:
-                - Unset (-1): Unset the DVDCSS_VERBOSE environment variable.
-                    Verbosity used will be up to the discretion of the library.
-                - Info  ( 0): Outputs no messages at all.
-                - Error ( 1): Outputs error messages to stderr.
-                - Debug ( 2): Outputs error messages and debug messages to stderr.
-
-        Returns the newly set verbosity level.
-        """
-        if isinstance(level, int):
-            level = VerbosityLevel(level)
-        elif not isinstance(level, VerbosityLevel):
-            raise TypeError(f"Expected an int or VerbosityLevel enum, not {level!r}")
-
-        if level == VerbosityLevel.Unset:
-            os.unsetenv("DVDCSS_VERBOSE")
-        else:
-            os.environ["DVDCSS_VERBOSE"] = str(level.value)
-
-        return VerbosityLevel(int(os.environ.get("DVDCSS_VERBOSE", -1)))
-
-    @staticmethod
-    def set_cracking_mode(
-        mode: types.CrackingMode_T = CrackingMode.Key,
-    ) -> CrackingMode:
-        """
-        Set libdvdcss cracking mode (DVDCSS_METHOD environment variable).
-
-        Parameters:
-            mode:
-                - Unset ("unset"): Unset the DVDCSS_METHOD environment variable.
-                - Title ("title"): By default the decrypted title key is guessed
-                  from the encrypted sectors of the stream. Thus it should work with a
-                  file as well as the DVD device. But decrypting a title key may take
-                  too much time or even fail. With the title method, the key is only
-                  checked at the beginning of each title, so it will not work if the
-                  key changes in the middle of a title.
-                - Disc ("disc"): The disc key is cracked first. Afterwards all title
-                  keys can be decrypted instantly, which allows checking them often.
-                - Key ("key"): The same as the "disc" method if you do not have a file
-                  with player keys at compile time. If you do, disc key decryption will
-                  be faster. This is the default method also employed by libdvdcss.
-
-        Returns the newly set cracking method.
-        """
-        if isinstance(mode, str):
-            mode = CrackingMode(mode)
-        elif not isinstance(mode, CrackingMode):
-            raise TypeError(f"Expected a str or CrackingMode enum, not {mode!r}")
-
-        if mode == CrackingMode.Unset:
-            os.unsetenv("DVDCSS_METHOD")
-        else:
-            os.environ["DVDCSS_METHOD"] = mode.value
-
-        return CrackingMode(os.environ.get("DVDCSS_METHOD", "unset"))
 
     @staticmethod
     def _load_library() -> CDLL:
