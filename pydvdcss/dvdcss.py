@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import re
 from ctypes import (
     CDLL,
     POINTER,
@@ -97,7 +98,8 @@ class DvdCss:
         Parameters:
             target: A block device, e.g. "E:", "/dev/sr0", an ISO image file, or a
                 VOB/IFO structure directory. May be a string or any os.PathLike object,
-                such as a pathlib.Path.
+                such as a pathlib.Path. On Windows a drive may be given as "G:", "G:\\",
+                or "G:/"; the latter is normalised for you as libdvdcss rejects it.
 
         Raises:
             OpenFailureError: Failure opening the disc or during post-initialization.
@@ -110,7 +112,14 @@ class DvdCss:
                 "A DVD is already opened, you cannot open another."
             )
 
-        self.handle = self._library.dvdcss_open(os.fspath(target).encode())
+        target = os.fspath(target)
+        if os.name == "nt" and re.fullmatch(r"[A-Za-z]:[/\\]?", target):
+            # libdvdcss accepts a Windows drive as "G:" or "G:\" but not "G:/". Only a
+            # bare drive root matches here (a real path/ISO/directory has more after the
+            # colon), so normalise it to "G:" to spare users a confusing open failure.
+            target = target[:2]
+
+        self.handle = self._library.dvdcss_open(target.encode())
         if self.handle is None:
             raise exceptions.OpenFailureError(
                 message_with_error(f"Failed to open '{target}'", self.error)
