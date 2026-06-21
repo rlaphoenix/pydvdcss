@@ -10,7 +10,7 @@ authors = [{ name = "rlaphoenix", email = "rlaphoenix@pm.me" }]
 requires-python = ">=3.10"
 readme = "README.md"
 license = "GPL-3.0-only"
-license-files = ["LICENSE"]
+license-files = ["LICENSE", "THIRD-PARTY-NOTICES.md"]
 keywords = ["python", "library", "dvd", "videolan", "libdvdcss"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -41,7 +41,26 @@ form = ["ruff~=0.15.18"]
 type = ["mypy~=2.1.0"]
 
 [tool.hatch.build.targets.sdist]
-include = ["pydvdcss", "CHANGELOG.md", "README.md", "LICENSE"]
+include = [
+    "pydvdcss",
+    "scripts",
+    "hatch_build.py",
+    "CHANGELOG.md",
+    "README.md",
+    "THIRD-PARTY-NOTICES.md",
+    "LICENSE",
+]
+# Include a bundled DLL/licence if present when an sdist is built from it (the
+# wheel may be built via an intermediate sdist). The pure sdist is built clean.
+artifacts = ["pydvdcss/libdvdcss-2.dll", "pydvdcss/LICENSE.libdvdcss"]
+
+[tool.hatch.build.targets.wheel]
+# The bundled libdvdcss DLL/licence are downloaded at build time and git-ignored;
+# list them as artifacts so they are still included in the (Windows) wheels.
+artifacts = ["pydvdcss/libdvdcss-2.dll", "pydvdcss/LICENSE.libdvdcss"]
+
+[tool.hatch.build.targets.wheel.hooks.custom]
+# Uses hatch_build.py -> CustomBuildHook to platform-tag wheels that bundle a DLL.
 
 [tool.ruff.lint]
 extend-select = ["B", "C4", "E", "FA", "FURB", "I", "ICN", "ISC", "N", "PERF", "PGH", "PIE", "RUF", "SIM", "UP", "W"]

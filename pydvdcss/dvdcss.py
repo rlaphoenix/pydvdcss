@@ -472,24 +472,31 @@ class DvdCss:
 
     @staticmethod
     def _load_library() -> CDLL:
-        """Load libdvdcss DLL/SO library via ctypes CDLL if available."""
-        lib_name = None
-        for possible_name in constants.LIBRARY_NAMES:
-            lib_name = find_library(possible_name)
-            if lib_name:
-                break
-            local_path = Path(__file__).parent.parent / possible_name
-            local_file = next(
-                (
-                    candidate
-                    for suffix in (".dll", ".so", ".dylib")
-                    if (candidate := local_path.with_suffix(suffix)).exists()
-                ),
-                None,
-            )
-            if local_file:
-                lib_name = str(local_file)
-                break
+        """Load the libdvdcss DLL/SO/dylib via ctypes if it can be located.
+
+        Search order: a copy bundled inside the package (shipped in the platform
+        wheels), a copy next to the project root (handy during development), then a
+        system-installed library via ctypes.util.find_library.
+        """
+        package_dir = Path(__file__).parent
+        local_roots = (package_dir, package_dir.parent)
+        suffixes = (".dll", ".so", ".dylib")
+
+        lib_name = next(
+            (
+                str(candidate)
+                for root in local_roots
+                for name in constants.LIBRARY_NAMES
+                for suffix in suffixes
+                if (candidate := (root / name).with_suffix(suffix)).exists()
+            ),
+            None,
+        )
+        if not lib_name:
+            for name in constants.LIBRARY_NAMES:
+                lib_name = find_library(name)
+                if lib_name:
+                    break
 
         if not lib_name:
             raise exceptions.LibraryNotFoundError(

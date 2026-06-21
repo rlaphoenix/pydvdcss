@@ -29,12 +29,25 @@ decryption.
 pip install pydvdcss
 ```
 
-You also need the libdvdcss library itself available to your system:
+pydvdcss is a wrapper, so it needs the native **libdvdcss** library too:
 
-- **Linux**: install it from your distribution's repositories.
+- **Windows**: nothing to do — the Windows wheels **bundle** `libdvdcss-2.dll`, so
+  `pip install pydvdcss` is all you need. (If you install the source distribution instead,
+  drop a `libdvdcss-2.dll` next to your script, in the current working directory, or in
+  `C:/Windows/System32`; pre-built DLLs: <https://github.com/allienx/libdvdcss-dll>.)
+- **Linux**: install it from your distribution's repositories (e.g. `libdvdcss2`).
 - **macOS**: `brew install libdvdcss`.
-- **Windows**: place a pre-compiled `libdvdcss-2.dll` in your current working directory or `C:/Windows/System32`
-  (even on 64-bit Windows). Pre-built DLLs can be found at <https://github.com/allienx/libdvdcss-dll>.
+
+pydvdcss looks for the library bundled inside the package first, then falls back to a
+system-installed copy.
+
+### Bundled libdvdcss
+
+The Windows wheels include a precompiled `libdvdcss-2.dll` (© VideoLAN, GPL-2.0-or-later)
+taken unmodified from <https://github.com/allienx/libdvdcss-dll> and verified by SHA-256 at
+build time. The pure wheel and source distribution do not bundle it. See
+[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for attribution, license, and the GPL
+written offer for source.
 
 ## Usage
 

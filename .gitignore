@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Bundled libdvdcss (downloaded at build time, see scripts/download_libdvdcss.py)
+/pydvdcss/libdvdcss-2.dll
+/pydvdcss/LICENSE.libdvdcss
+
 # Distribution / packaging
 .Python
 build/
