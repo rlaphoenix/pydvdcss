@@ -290,7 +290,7 @@ class DvdCss:
 
     def readv(self, *buffers: Array[c_char], flag: ReadFlag_T = ReadFlag.Unset) -> int:
         """
-        Read from the DVD device or directory to multiple buffers.
+        Read from the DVD device or directory into multiple buffers (vectored read).
 
         You must seek to the start of each title and/or through VOB data sectors to
         get the title keys necessary to descramble/decrypt CSS. This will NOT error
@@ -299,21 +299,32 @@ class DvdCss:
         back to the start and then begin reading.
 
         Parameters:
-            buffers: Buffers to write to. Buffer lengths must be multiples of a sector
-                (2048 bytes).
+            buffers: One or more buffers to read into. Each buffer's length must be a
+                non-zero multiple of a sector (2048 bytes); create them with e.g.
+                create_string_buffer(b"", 2048). On success each buffer is filled with
+                consecutive sectors, readable from its `raw` property.
             flag: Reading Flag. Use ReadFlag.READ_DECRYPT to decrypt scrambled VOB data
                 sectors as they are read. Otherwise, use ReadFlag.Unset.
 
+        Note: The returned count is libdvdcss's own return value. On Windows libdvdcss
+        reports only the first buffer's block count rather than the total, so do not
+        rely on it to detect short reads; all buffers are still filled on success. Use
+        read() if you need reliable short-read detection.
+
         Raises:
             NoDeviceError: No DVD device or directory is open yet.
-            ReadError: Failure reading sectors, or returned data is less than expected.
+            ValueError: No buffers given, or a buffer is not a non-zero sector multiple.
+            ReadError: libdvdcss reported a read failure.
 
-        Returns the read logical blocks within the buffers.
+        Returns the number of logical blocks (sectors) libdvdcss reported reading.
         """
         if self.handle is None:
             raise exceptions.NoDeviceError(
                 "No DVD device or directory is open yet, use open() first."
             )
+
+        if not buffers:
+            raise ValueError("At least one buffer is required.")
 
         unsupported_buffers = [
             buffer for buffer in buffers if not isinstance(buffer, Array)
@@ -331,24 +342,22 @@ class DvdCss:
                 f"Expected flag to be an int or ReadFlag enum, not {flag!r}"
             )
 
-        buffer_len = sum(map(len, buffers))
-        if buffer_len % constants.SECTOR_SIZE != 0:
-            raise exceptions.PyDvdCssError(
-                f"Buffers must read a multiple of 1 sector "
-                f"({constants.SECTOR_SIZE} bytes), tried to read {buffer_len} bytes"
-            )
-
-        sectors = buffer_len // constants.SECTOR_SIZE
-
-        read_sectors = self._library.dvdcss_readv(
-            self.handle, iovecs(*buffers), sectors, flag.value
-        )
-        if read_sectors < sectors:
-            raise exceptions.ReadError(
-                message_with_error(
-                    f"Read {read_sectors} sectors, expected {sectors}",
-                    self.error,
+        for buffer in buffers:
+            if len(buffer) == 0 or len(buffer) % constants.SECTOR_SIZE != 0:
+                raise ValueError(
+                    f"Each buffer must be a non-zero multiple of a sector "
+                    f"({constants.SECTOR_SIZE} bytes), got one of {len(buffer)} bytes"
                 )
+
+        # libdvdcss's i_blocks is the number of iovec entries (like POSIX readv's
+        # iovcnt), not the total sector count; passing the latter reads past the
+        # iovec array. Each entry may itself span multiple sectors.
+        read_sectors = self._library.dvdcss_readv(
+            self.handle, iovecs(*buffers), len(buffers), flag.value
+        )
+        if read_sectors < 0:
+            raise exceptions.ReadError(
+                message_with_error("Failed reading sectors", self.error)
             )
 
         return read_sectors

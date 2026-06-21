@@ -4,6 +4,7 @@ from ctypes import (
     Structure,
     c_char,
     c_int,
+    c_size_t,
     c_uint64,
     c_void_p,
     cast,
@@ -26,7 +27,8 @@ class ReadFlag(Enum):
 
 
 class Iovec(Structure):
-    _fields_ = (("iov_base", c_void_p), ("iov_len", c_int))
+    # Matches libdvdcss's `struct iovec` (device.h): iov_len is size_t, not int.
+    _fields_ = (("iov_base", c_void_p), ("iov_len", c_size_t))
 
 
 def iovecs(*buffers: Array[c_char]) -> Array[Iovec]:
