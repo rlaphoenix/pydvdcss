@@ -24,6 +24,9 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
 - Various CI and linting tooling mistakes and made it more efficient.
 - `DvdCss.error()` (which is now `DvdCss.error` property) is now defined correctly and
   now returns None or string values instead of a useless integer value.
+- The `pf_read` callback of `DvdCssStreamCb` now uses a `c_void_p` (writable address) buffer
+  instead of `c_char_p`. ctypes hands a callback a `c_char_p` argument as immutable bytes, so the
+  callback could not write the read data into the buffer. This was a blocker for `open_stream()`.
 
 ### Changed
 

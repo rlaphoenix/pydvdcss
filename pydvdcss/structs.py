@@ -3,7 +3,6 @@ from ctypes import (
     Array,
     Structure,
     c_char,
-    c_char_p,
     c_int,
     c_uint64,
     c_void_p,
@@ -47,7 +46,9 @@ class DvdCssStreamCb(Structure):
         # custom seek callback - int(p_stream, i_pos)
         ("pf_seek", CFUNCTYPE(c_int, c_void_p, c_uint64)),
         # custom read callback - int(p_stream, buffer, i_read)
-        ("pf_read", CFUNCTYPE(c_int, c_void_p, c_char_p, c_int)),
+        # buffer is c_void_p (a writable address) not c_char_p; ctypes hands a callback a c_char_p
+        # argument as immutable bytes, which the callback cannot write the read data into.
+        ("pf_read", CFUNCTYPE(c_int, c_void_p, c_void_p, c_int)),
         # custom vectored read callback - int(p_stream, p_iovec, i_blocks)
         ("pf_readv", CFUNCTYPE(c_int, c_void_p, c_void_p, c_int)),
     )
