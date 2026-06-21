@@ -110,8 +110,7 @@ class DvdCss:
             )
 
         self.handle = self._library.dvdcss_open(target.encode())
-        if self.handle == 0:
-            self.handle = None
+        if self.handle is None:
             raise exceptions.OpenFailureError(
                 message_with_error(f"Failed to open '{target}'", self.error)
             )
@@ -146,8 +145,7 @@ class DvdCss:
             )
 
         self.handle = self._library.dvdcss_open_stream(p_stream, byref(p_stream_cb))
-        if self.handle == 0:
-            self.handle = None
+        if self.handle is None:
             raise exceptions.OpenFailureError(
                 message_with_error(f"Failed to open '{p_stream_cb}'", self.error)
             )
