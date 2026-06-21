@@ -405,11 +405,16 @@ class DvdCss:
             if lib_name:
                 break
             local_path = Path(__file__).parent.parent / possible_name
-            if (
-                local_path.with_suffix(".dll").exists()
-                or local_path.with_suffix(".so").exists()
-            ):
-                lib_name = str(local_path)
+            local_file = next(
+                (
+                    candidate
+                    for suffix in (".dll", ".so", ".dylib")
+                    if (candidate := local_path.with_suffix(suffix)).exists()
+                ),
+                None,
+            )
+            if local_file:
+                lib_name = str(local_file)
                 break
 
         if not lib_name:
