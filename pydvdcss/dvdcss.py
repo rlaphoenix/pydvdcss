@@ -256,12 +256,6 @@ class DvdCss:
                 f"Expected flag to be an int or ReadFlag enum, not {flag!r}"
             )
 
-        # TODO: Theoretically it could read less than the expected bytes into the buffer
-        #       and then we have NOP bytes as if nothing went wrong.
-        #       `buffer size-read_sectors` will not work since the buffer will always
-        #       be the correct length, regardless how much dvdcss_read() actually reads.
-        #       We are putting faith into dvdcss_read() to always read sectors in full
-        #       or dont return a sector at all, but does it work like this?
         buffer = create_string_buffer(b"", sectors * constants.SECTOR_SIZE)
 
         read_sectors = self._library.dvdcss_read(
