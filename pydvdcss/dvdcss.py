@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from ctypes import (
     CDLL,
     POINTER,
@@ -395,6 +396,54 @@ class DvdCss:
         if self.handle is None:
             return False
         return self._library.dvdcss_is_scrambled(self.handle) == 1
+
+    @staticmethod
+    def set_verbosity(verbosity: int = 0) -> int:
+        """
+        Set libdvdcss verbosity (DVDCSS_VERBOSE environment variable).
+
+        - -1: Unset the DVDCSS_VERBOSE environment variable.
+        -  0: No error messages, no debug messages (this is the default).
+        -  1: Only error messages.
+        -  2: Error and debug messages.
+
+        Returns the now current value of DVDCSS_VERBOSE, expected value should be
+        the same as the verbosity int provided.
+        """
+        if verbosity == -1:
+            os.environ.pop("DVDCSS_VERBOSE", None)
+            return -1
+        os.environ["DVDCSS_VERBOSE"] = str(verbosity)
+        return int(os.environ["DVDCSS_VERBOSE"])
+
+    @staticmethod
+    def set_cracking_mode(
+        mode: Literal["unset", "title", "disc", "key"] = "key",
+    ) -> str | None:
+        """
+        Set libdvdcss cracking mode (DVDCSS_METHOD environment variable).
+
+        - unset: Unset the DVDCSS_METHOD environment variable.
+        - title: By default the decrypted title key is guessed from the encrypted
+          sectors of the stream. Thus it should work with a file as well as
+          the DVD device. But decrypting a title key may take too much time
+          or even fail. With the title method, the key is only checked at
+          the beginning of each title, so it will not work if the key
+          changes in the middle of a title.
+        - disc: The disc key is cracked first. Afterwards all title keys can be
+          decrypted instantly, which allows checking them often.
+        - key: The same as the "disc" method if you do not have a file with player
+          keys at compile time. If you do, disc key decryption will be faster.
+          This is the default method also employed by libdvdcss.
+
+        Returns the now current value of DVDCSS_METHOD, expected value should be
+        the same as the mode string provided.
+        """
+        if mode == "unset":
+            os.environ.pop("DVDCSS_METHOD", None)
+            return None
+        os.environ["DVDCSS_METHOD"] = mode
+        return os.environ["DVDCSS_METHOD"]
 
     @staticmethod
     def _load_library() -> CDLL:
