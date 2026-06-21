@@ -1,52 +1,49 @@
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry]
+[project]
 name = "pydvdcss"
 version = "1.4.0"
 description = "Python wrapper for VideoLAN's libdvdcss."
-license = "GPLv3"
-authors = ["rlaphoenix <rlaphoenix@pm.me>"]
+authors = [{ name = "rlaphoenix", email = "rlaphoenix@pm.me" }]
+requires-python = ">=3.10"
 readme = "README.md"
-repository = "https://github.com/rlaphoenix/pydvdcss"
-documentation = "https://pydvdcss.readthedocs.io"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
 keywords = ["python", "library", "dvd", "videolan", "libdvdcss"]
 classifiers = [
-  "Development Status :: 5 - Production/Stable",
-  "Intended Audience :: Developers",
-  "Natural Language :: English",
-  "Operating System :: OS Independent",
-  "Topic :: Multimedia",
-  "Topic :: Multimedia :: Video",
-  "Topic :: Multimedia :: Video :: Conversion",
-  "Topic :: Security :: Cryptography",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Multimedia",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Video :: Conversion",
+    "Topic :: Security :: Cryptography",
 ]
-include = [
-  { path = "CHANGELOG.md", format = "sdist" },
-  { path = "README.md", format = "sdist" },
-  { path = "LICENSE", format = "sdist" },
+dependencies = [
+    "typing-extensions~=4.15",
 ]
 
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/rlaphoenix/pydvdcss/issues"
-"Forums" = "https://github.com/rlaphoenix/pydvdcss/discussions"
-"Changelog" = "https://github.com/rlaphoenix/pydvdcss/blob/master/CHANGELOG.md"
+[project.urls]
+Repository = "https://github.com/rlaphoenix/pydvdcss"
+Issues = "https://github.com/rlaphoenix/pydvdcss/issues"
+Forums = "https://github.com/rlaphoenix/pydvdcss/discussions"
+Changelog = "https://github.com/rlaphoenix/pydvdcss/blob/master/CHANGELOG.md"
 
-[tool.poetry.dependencies]
-python = "^3.9"
-Sphinx = {version = "^7.4.6", optional = true}
-dunamai = {version = "^1.21.2", optional = true}
-furo = {version = "^2024.7.18", optional = true}
-myst-parser = {version = "^3.0.1", optional = true}
+[dependency-groups]
+lint = ["ruff~=0.15.18", "pre-commit~=4.6.0"]
+form = ["ruff~=0.15.18"]
+type = ["mypy~=2.1.0"]
 
-[tool.poetry.dev-dependencies]
-ruff = "~0.5.3"
-mypy = "^1.10.1"
-pre-commit = "^3.7.1"
-
-[tool.poetry.extras]
-docs = ["Sphinx", "dunamai", "furo", "myst-parser"]
+[tool.hatch.build.targets.sdist]
+include = ["pydvdcss", "CHANGELOG.md", "README.md", "LICENSE"]
 
 [tool.ruff.lint]
 extend-select = ["B", "C4", "E", "FA", "FURB", "I", "ICN", "ISC", "N", "PERF", "PGH", "PIE", "RUF", "SIM", "UP", "W"]

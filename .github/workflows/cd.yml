@@ -9,33 +9,25 @@ jobs:
   tagged-release:
     name: Tagged Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.11.x"
-    - name: Install Poetry
-      uses: abatilo/actions-poetry@v2
-      with:
-        poetry-version: 1.6.1
-    - name: Install project
-      run: poetry install --no-dev
-    - name: Build project
-      run: poetry build
-    - name: Upload wheel
-      uses: actions/upload-artifact@v3
-      with:
-        name: Python Wheel
-        path: "dist/*.whl"
-    - name: Deploy release
-      uses: marvinpinto/action-automatic-releases@latest
-      with:
-        prerelease: false
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        files: |
-          dist/*.whl
-    - name: Publish to PyPI
-      env:
-        POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
-      run: poetry publish
+      - uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v6
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+      - name: Build project
+        run: uv build
+      - name: Deploy release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          prerelease: false
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          files: |
+            dist/*.whl
+            dist/*.tar.gz
+      - name: Publish to PyPI
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
+        run: uv publish

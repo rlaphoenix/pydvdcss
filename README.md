@@ -1,19 +1,110 @@
 ![Banner](banner.png)
 
-[![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Dependency management: Poetry](https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json)](https://python-poetry.org/)
+[![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/rlaphoenix/pydvdcss/blob/master/LICENSE)
 [![Python version](https://img.shields.io/pypi/pyversions/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
 [![Release version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
-[![DeepSource issues](https://deepsource.io/gh/rlaphoenix/pydvdcss.svg/?label=active+issues)](https://deepsource.io/gh/rlaphoenix/pydvdcss)
+[![Manager: uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Onyx-Nostalgia/uv/refs/heads/fix/logo-badge/assets/badge/v0.json)](https://github.com/astral-sh/uv)
+[![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![Build status](https://github.com/rlaphoenix/pydvdcss/actions/workflows/ci.yml/badge.svg)](https://github.com/rlaphoenix/pydvdcss/actions/workflows/ci.yml)
-[![Docs status](https://readthedocs.org/projects/pydvdcss/badge/)](https://pydvdcss.readthedocs.io)
 
-**pydvdcss** is a python wrapper for VideoLAN's [libdvdcss].
+**pydvdcss** is a Python wrapper for VideoLAN's [libdvdcss].
 
 [libdvdcss] is a simple library designed for accessing DVDs like a block device without having to bother about the
 decryption.
 
   [libdvdcss]: <https://www.videolan.org/developers/libdvdcss.html>
 
-**Documentation**: https://pydvdcss.readthedocs.io  
-**License**: [GNU General Public License, Version 3.0](LICENSE)
+## Features
+
+- **Portability** — Supported platforms include GNU/Linux, FreeBSD, NetBSD, OpenBSD, Haiku, macOS, Solaris, QNX,
+  OS/2, and Windows NT 4.0 SP4 (with IE 5.0) or later.
+- **Simplicity** — A DVD player can be built around the libdvdcss API using no more than 4 or 5 library calls.
+- **Freedom** — libdvdcss is released under the GPL, ensuring it stays free and is used only for free software.
+- **Adaptability** — Unlike most similar projects, libdvdcss does not require the region of your drive to be set, and
+  will try its best to read from the disc even in the case of a region mismatch.
+
+## Installation
+
+```shell
+pip install pydvdcss
+```
+
+You also need the libdvdcss library itself available to your system:
+
+- **Linux**: install it from your distribution's repositories.
+- **macOS**: `brew install libdvdcss`.
+- **Windows**: place a pre-compiled `libdvdcss-2.dll` in your current working directory or `C:/Windows/System32`
+  (even on 64-bit Windows). Pre-built DLLs can be found at <https://github.com/allienx/libdvdcss-dll>.
+
+## Usage
+
+```python
+from pydvdcss import DvdCss
+
+with DvdCss() as dvd:
+    dvd.open("D:")               # a device ("D:", "/dev/sr0"), an ISO file, or a VIDEO_TS directory
+    print(dvd.is_scrambled)      # True if the disc is CSS-protected
+
+    dvd.seek(16)                 # seek to the Primary Volume Descriptor
+    data = dvd.read(1)           # read 1 logical block (2048 bytes), returned as bytes
+    print(data[40:72])           # e.g. b'SPONGEBOB_SQUAREPANTS_D1\x00\x00...'
+```
+
+To descramble CSS-protected VOB data, seek to the start of each title with `SeekFlag.SEEK_KEY` to obtain its title
+key, then read the sectors with `ReadFlag.READ_DECRYPT`. See the docstrings on `DvdCss` and its methods for the full
+API, including `seek()`, `read()`, `readv()`, and `open_stream()`.
+
+## Development
+
+This project is managed using [uv](https://docs.astral.sh/uv), an extremely fast Python package and project manager.
+Install the latest version of uv before continuing. Development currently requires Python 3.10+.
+
+### Set up
+
+Starting from Zero? Not sure where to begin? Here's steps on setting up this Python project using uv. Note that
+uv installation instructions should be followed from the uv Docs: https://docs.astral.sh/uv/getting-started/installation
+
+1. Clone the Repository:
+    ```shell
+    git clone https://github.com/rlaphoenix/pydvdcss
+    cd pydvdcss
+    ```
+2. Install the Project with uv:
+    ```shell
+    uv sync --all-groups
+    ```
+    This creates a Virtual environment at `.venv` and then installs all project dependencies into the Virtual
+    environment. Your System Python environment is not affected at all.
+3. Now activate the Virtual environment:
+    ```shell
+    .venv\Scripts\activate
+    ```
+    (or `source .venv/bin/activate` on macOS and Linux)
+
+    Note:
+    - You can alternatively just prefix `uv run` to any command you wish to run under the Virtual environment.
+    - I recommend entering the Virtual environment and all further instructions will have assumed you did.
+    - JetBrains PyCharm and Visual Studio Code both detect the `.venv` Virtual environment automatically.
+    - For more information, see: https://docs.astral.sh/uv/concepts/projects/
+4. Install Pre-commit tooling to ensure safe and quality commits:
+    ```shell
+    uv tool install pre-commit --with pre-commit-uv --force-reinstall
+    pre-commit install
+    ```
+
+Now feel free to work on the project however you like, all code will be checked before committing.
+
+### Building Source and Wheel distributions
+
+    uv build
+
+You can optionally specify `--sdist` or `--wheel` to build that distribution only.
+Built files can be found in the `/dist` directory.
+
+## License
+
+This project is licensed under the terms of the [GNU General Public License, Version 3.0](LICENSE).
+
+* * *
+
+© rlaphoenix 2020-2026

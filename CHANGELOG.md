@@ -7,10 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-This version is all about improving the UX and upgrading it's tooling. Support for
-Python 3.8 has been dropped, but 3.12 is now supported. Unfortunately this means
-dropping support for Windows 7/8/8.1 as well. This was more or less necessary to keep
-up with the latest versions of other dependencies as well as crucial bug fixes.
+This version is all about improving the UX and overhauling the tooling. Project management
+has moved from Poetry to uv with a Hatchling build backend, the supported Python versions
+are now 3.10 through 3.14, and all dependencies have been updated. The Sphinx documentation
+has been retired in favour of the README.
 
 ### Added
 
@@ -31,9 +31,14 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
   `dvdcss_open_stream` C function takes a `dvdcss_stream_cb *`, but the struct was passed
   by value, so the callbacks were never reachable by libdvdcss. The docstring's note about
   this never working has been replaced with the actual requirement: `p_stream` must be non-zero.
+- Declared `typing-extensions` as a runtime dependency. The code imports it for `@deprecated`
+  but it was never listed, so a clean install could fail to import.
 
 ### Changed
 
+- Switched project management and the build backend from Poetry to uv with Hatchling.
+- Now supports Python 3.10 through 3.14 (previously 3.8 through 3.11).
+- Updated all dependencies, and switched development tooling (CI/CD, pre-commit) to uv.
 - Various doc-strings were improved and made more clear in various ways.
 - Most PyDvdCss-inherited exceptions now try to call `DvdCss.error()` for you to
   include potentially useful error information when the errors happen. Though, Errors
@@ -81,6 +86,9 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
 
 ### Removed
 
+- The Sphinx documentation system and Read the Docs configuration. The relevant information
+  (installation, features, and a usage example) now lives in the README.
+- The DeepSource configuration.
 - The `SECTOR_SIZE`, `BLOCK_BUFFER`, `NO_FLAGS`, `READ_DECRYPT`, `SEEK_MPEG`,
   `SEEK_KEY`, `flags_m`, and `flags_s` class variables were removed. The variables to
   do with flags/read/seek were refactored as SeekFlag and ReadFlag.
