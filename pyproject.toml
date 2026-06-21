@@ -30,10 +30,10 @@ classifiers = [
 dependencies = []
 
 [project.urls]
-Repository = "https://github.com/rlaphoenix/pydvdcss"
-Issues = "https://github.com/rlaphoenix/pydvdcss/issues"
-Forums = "https://github.com/rlaphoenix/pydvdcss/discussions"
-Changelog = "https://github.com/rlaphoenix/pydvdcss/blob/master/CHANGELOG.md"
+Repository = "https://github.com/homemediadb/pydvdcss"
+Issues = "https://github.com/homemediadb/pydvdcss/issues"
+Forums = "https://github.com/homemediadb/pydvdcss/discussions"
+Changelog = "https://github.com/homemediadb/pydvdcss/blob/master/CHANGELOG.md"
 
 [dependency-groups]
 lint = ["ruff~=0.15.18", "pre-commit~=4.6.0"]

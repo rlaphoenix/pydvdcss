@@ -24,7 +24,7 @@ The bundled `libdvdcss-2.dll` is built from the corresponding source of libdvdcs
 at the bundled version, available at
 <https://download.videolan.org/pub/libdvdcss/>. For at least three years from the
 date of distribution, you may also request the complete corresponding source by
-opening an issue at <https://github.com/rlaphoenix/pydvdcss/issues>.
+opening an issue at <https://github.com/homemediadb/pydvdcss/issues>.
 
 pydvdcss itself is licensed GPL-3.0-only (see `LICENSE`); GPL-2.0-or-later is
 compatible with it.

@@ -1,11 +1,11 @@
 ![Banner](banner.png)
 
-[![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/rlaphoenix/pydvdcss/blob/master/LICENSE)
+[![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/homemediadb/pydvdcss/blob/master/LICENSE)
 [![Python version](https://img.shields.io/pypi/pyversions/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
 [![Release version](https://img.shields.io/pypi/v/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
 [![Manager: uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Onyx-Nostalgia/uv/refs/heads/fix/logo-badge/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![Linter: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![Build status](https://github.com/rlaphoenix/pydvdcss/actions/workflows/ci.yml/badge.svg)](https://github.com/rlaphoenix/pydvdcss/actions/workflows/ci.yml)
+[![Build status](https://github.com/homemediadb/pydvdcss/actions/workflows/ci.yml/badge.svg)](https://github.com/homemediadb/pydvdcss/actions/workflows/ci.yml)
 
 **pydvdcss** is a Python wrapper for VideoLAN's [libdvdcss].
 
@@ -79,7 +79,7 @@ uv installation instructions should be followed from the uv Docs: https://docs.a
 
 1. Clone the Repository:
     ```shell
-    git clone https://github.com/rlaphoenix/pydvdcss
+    git clone https://github.com/homemediadb/pydvdcss
     cd pydvdcss
     ```
 2. Install the Project with uv:
