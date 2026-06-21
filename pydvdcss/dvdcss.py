@@ -83,7 +83,7 @@ class DvdCss:
     def __exit__(self, *_: Any, **__: Any) -> None:
         self.close()
 
-    def open(self, target: str) -> int:
+    def open(self, target: str | os.PathLike[str]) -> int:
         """
         Open a DVD device or directory.
 
@@ -95,8 +95,9 @@ class DvdCss:
         need to match to be able to obtain the disc key.
 
         Parameters:
-            target: A block device string, e.g. "E:", "/dev/sr0", an ISO image file,
-                or a VOB/IFO structure directory.
+            target: A block device, e.g. "E:", "/dev/sr0", an ISO image file, or a
+                VOB/IFO structure directory. May be a string or any os.PathLike object,
+                such as a pathlib.Path.
 
         Raises:
             OpenFailureError: Failure opening the disc or during post-initialization.
@@ -109,7 +110,7 @@ class DvdCss:
                 "A DVD is already opened, you cannot open another."
             )
 
-        self.handle = self._library.dvdcss_open(target.encode())
+        self.handle = self._library.dvdcss_open(os.fspath(target).encode())
         if self.handle is None:
             raise exceptions.OpenFailureError(
                 message_with_error(f"Failed to open '{target}'", self.error)
