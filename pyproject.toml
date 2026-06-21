@@ -27,9 +27,7 @@ classifiers = [
     "Topic :: Multimedia :: Video :: Conversion",
     "Topic :: Security :: Cryptography",
 ]
-dependencies = [
-    "typing-extensions~=4.15",
-]
+dependencies = []
 
 [project.urls]
 Repository = "https://github.com/rlaphoenix/pydvdcss"

@@ -15,8 +15,6 @@ from ctypes.util import find_library
 from pathlib import Path
 from typing import Any, Literal
 
-from typing_extensions import deprecated
-
 from pydvdcss import constants, exceptions
 from pydvdcss._types import ReadFlag_T, SeekFlag_T
 from pydvdcss.structs import (
@@ -446,8 +444,3 @@ class DvdCss:
         lib.dvdcss_is_scrambled.restype = c_int
 
         return lib
-
-    @deprecated("Use :func:`close` instead.")
-    def dispose(self) -> None:
-        """(deprecated) Use :func:`close` instead."""
-        self.close()
