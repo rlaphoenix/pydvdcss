@@ -288,9 +288,7 @@ class DvdCss:
 
         return data
 
-    def readv(
-        self, *buffers: Array[c_char], decrypt: bool | Literal[0, 1] = False
-    ) -> int:
+    def readv(self, *buffers: Array[c_char], flag: ReadFlag_T = ReadFlag.Unset) -> int:
         """
         Read from the DVD device or directory to multiple buffers.
 
@@ -303,8 +301,8 @@ class DvdCss:
         Parameters:
             buffers: Buffers to write to. Buffer lengths must be multiples of a sector
                 (2048 bytes).
-            decrypt: Whether to decrypt the read sectors, if encrypted. Only VOB data
-                sectors can be scrambled. It is safe to always use True.
+            flag: Reading Flag. Use ReadFlag.READ_DECRYPT to decrypt scrambled VOB data
+                sectors as they are read. Otherwise, use ReadFlag.Unset.
 
         Raises:
             NoDeviceError: No DVD device or directory is open yet.
@@ -326,11 +324,11 @@ class DvdCss:
                 unsupported_buffers,
             )
 
-        if isinstance(decrypt, bool):
-            decrypt = 1 if decrypt else 0
-        elif decrypt not in (0, 1):
+        if isinstance(flag, int):
+            flag = ReadFlag(flag)
+        elif not isinstance(flag, ReadFlag):
             raise TypeError(
-                f"Expected decrypt to be a bool or int-bool, not {decrypt!r}"
+                f"Expected flag to be an int or ReadFlag enum, not {flag!r}"
             )
 
         buffer_len = sum(map(len, buffers))
@@ -343,7 +341,7 @@ class DvdCss:
         sectors = buffer_len // constants.SECTOR_SIZE
 
         read_sectors = self._library.dvdcss_readv(
-            self.handle, iovecs(*buffers), sectors, decrypt
+            self.handle, iovecs(*buffers), sectors, flag.value
         )
         if read_sectors < sectors:
             raise exceptions.ReadError(
