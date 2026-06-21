@@ -385,7 +385,7 @@ class DvdCss:
         if not error or error == b"no error":
             return None
 
-        return error.decode("utf8").strip() or None
+        return error.decode("utf8", errors="replace").strip() or None
 
     @property
     def is_scrambled(self) -> bool:
