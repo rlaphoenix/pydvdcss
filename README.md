@@ -1,4 +1,4 @@
-![Banner](banner.png)
+![Banner](https://raw.githubusercontent.com/homemediadb/pydvdcss/master/banner.png)
 
 [![License](https://img.shields.io/:license-GPL%203.0-blue.svg)](https://github.com/homemediadb/pydvdcss/blob/master/LICENSE)
 [![Python version](https://img.shields.io/pypi/pyversions/pydvdcss)](https://pypi.python.org/pypi/pydvdcss)
@@ -46,8 +46,8 @@ system-installed copy.
 The Windows wheels include a precompiled `libdvdcss-2.dll` (© VideoLAN, GPL-2.0-or-later)
 taken unmodified from <https://github.com/allienx/libdvdcss-dll> and verified by SHA-256 at
 build time. The pure wheel and source distribution do not bundle it. See
-[THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md) for attribution, license, and the GPL
-written offer for source.
+[THIRD-PARTY-NOTICES.md](https://github.com/homemediadb/pydvdcss/blob/master/THIRD-PARTY-NOTICES.md)
+for attribution, license, and the GPL written offer for source.
 
 ## Usage
 
@@ -116,7 +116,7 @@ Built files can be found in the `/dist` directory.
 
 ## License
 
-This project is licensed under the terms of the [GNU General Public License, Version 3.0](LICENSE).
+This project is licensed under the terms of the [GNU General Public License, Version 3.0](https://github.com/homemediadb/pydvdcss/blob/master/LICENSE).
 
 * * *
 
