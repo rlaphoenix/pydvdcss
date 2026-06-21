@@ -27,6 +27,10 @@ up with the latest versions of other dependencies as well as crucial bug fixes.
 - The `pf_read` callback of `DvdCssStreamCb` now uses a `c_void_p` (writable address) buffer
   instead of `c_char_p`. ctypes hands a callback a `c_char_p` argument as immutable bytes, so the
   callback could not write the read data into the buffer. This was a blocker for `open_stream()`.
+- `DvdCss.open_stream()` now passes the `dvdcss_stream_cb` struct by reference. The
+  `dvdcss_open_stream` C function takes a `dvdcss_stream_cb *`, but the struct was passed
+  by value, so the callbacks were never reachable by libdvdcss. The docstring's note about
+  this never working has been replaced with the actual requirement: `p_stream` must be non-zero.
 
 ### Changed
 

@@ -4,6 +4,7 @@ from ctypes import (
     CDLL,
     POINTER,
     Array,
+    byref,
     c_char,
     c_char_p,
     c_int,
@@ -124,13 +125,12 @@ class DvdCss:
         Essentially instead of having libdvdcss read from a target device,
         you provide it functions that does the reading and seeking yourself.
 
-        Note: I have yet to actually get this to work. I don't know if I'm
-        doing something wrong in terms of ctypes definitions or something
-        else, but the definitions seem correct. Perhaps p_stream is used in
-        a way that I don't yet understand.
+        Note: `p_stream` must be a non-zero value. libdvdcss stores it and passes it
+        back to your callbacks, and it rejects a stream opened with a NULL (0) handle
+        even if your callbacks never use it.
 
         Parameters:
-            p_stream: A private handle used by p_stream_cb.
+            p_stream: A private handle passed to p_stream_cb, must be non-zero.
             p_stream_cb: A struct containing seek and read functions.
 
         Raises:
@@ -145,7 +145,7 @@ class DvdCss:
                 "A DVD is already opened, you cannot open another."
             )
 
-        self.handle = self._library.dvdcss_open_stream(p_stream, p_stream_cb)
+        self.handle = self._library.dvdcss_open_stream(p_stream, byref(p_stream_cb))
         if self.handle == 0:
             self.handle = None
             raise exceptions.OpenFailureError(
@@ -426,7 +426,7 @@ class DvdCss:
 
         lib.dvdcss_open.argtypes = [c_char_p]
         lib.dvdcss_open.restype = dvdcss_t
-        lib.dvdcss_open_stream.argtypes = [dvdcss_t, DvdCssStreamCb]
+        lib.dvdcss_open_stream.argtypes = [dvdcss_t, POINTER(DvdCssStreamCb)]
         lib.dvdcss_open_stream.restype = dvdcss_t
         lib.dvdcss_close.argtypes = [dvdcss_t]
         lib.dvdcss_close.restype = c_int
