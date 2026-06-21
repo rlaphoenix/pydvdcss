@@ -215,7 +215,7 @@ class DvdCss:
         The flag is used to indicate when the library should decrypt VOB data with it's
         CSS title key.
 
-        - Use ReadFlag.DECRYPT when seeking throughout VOB data sectors.
+        - Use ReadFlag.READ_DECRYPT when seeking throughout VOB data sectors.
         - Otherwise, use ReadFlag.Unset.
 
         You must seek to the start of each title and/or through VOB data sectors to
