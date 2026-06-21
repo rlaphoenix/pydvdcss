@@ -135,6 +135,7 @@ class DvdCss:
         Raises:
             OpenFailureError: Failure opening the disc or during post-initialization.
             AlreadyInUseError: If you try to open a 2nd disc without first closing.
+            ValueError: If p_stream is zero, which libdvdcss rejects.
 
         Returns a handle to be used for all subsequent libdvdcss calls.
         """
@@ -142,6 +143,12 @@ class DvdCss:
             raise exceptions.AlreadyInUseError(
                 "A DVD is already opened, you cannot open another."
             )
+
+        if not isinstance(p_stream, int):
+            raise TypeError(f"Expected p_stream to be an int, not {p_stream!r}")
+
+        if p_stream == 0:
+            raise ValueError("p_stream must be a non-zero value, libdvdcss rejects 0.")
 
         self.handle = self._library.dvdcss_open_stream(p_stream, byref(p_stream_cb))
         if self.handle is None:
