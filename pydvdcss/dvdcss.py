@@ -137,7 +137,6 @@ class DvdCss:
             AlreadyInUseError: If you try to open a 2nd disc without first closing.
 
         Returns a handle to be used for all subsequent libdvdcss calls.
-        If an error occurred, NULL is returned.
         """
         if self.handle is not None:
             raise exceptions.AlreadyInUseError(
