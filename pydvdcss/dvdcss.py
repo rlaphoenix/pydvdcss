@@ -17,7 +17,8 @@ from typing import Any, Literal
 
 from typing_extensions import deprecated
 
-from pydvdcss import constants, exceptions, types
+from pydvdcss import constants, exceptions
+from pydvdcss._types import ReadFlag_T, SeekFlag_T
 from pydvdcss.structs import (
     DvdCssStreamCb,
     Iovec,
@@ -158,7 +159,7 @@ class DvdCss:
 
         return self.handle
 
-    def seek(self, sector: int, flag: types.SeekFlag_T = SeekFlag.Unset) -> int:
+    def seek(self, sector: int, flag: SeekFlag_T = SeekFlag.Unset) -> int:
         """
         Seeks to a position in the DVD device or directory.
 
@@ -214,7 +215,7 @@ class DvdCss:
 
         return new_position
 
-    def read(self, sectors: int, flag: types.ReadFlag_T = ReadFlag.Unset) -> bytes:
+    def read(self, sectors: int, flag: ReadFlag_T = ReadFlag.Unset) -> bytes:
         """
         Read from the DVD device or directory.
 
