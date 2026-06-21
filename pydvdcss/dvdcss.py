@@ -417,6 +417,10 @@ class DvdCss:
         -  1: Only error messages.
         -  2: Error and debug messages.
 
+        Note: This sets a process-global environment variable that libdvdcss only reads
+        when opening a disc. Call it before open(); it has no effect on an open handle,
+        and it affects every DvdCss instance opened afterwards in this process.
+
         Returns the now current value of DVDCSS_VERBOSE, expected value should be
         the same as the verbosity int provided.
         """
@@ -445,6 +449,10 @@ class DvdCss:
         - key: The same as the "disc" method if you do not have a file with player
           keys at compile time. If you do, disc key decryption will be faster.
           This is the default method also employed by libdvdcss.
+
+        Note: This sets a process-global environment variable that libdvdcss only reads
+        when opening a disc. Call it before open(); it has no effect on an open handle,
+        and it affects every DvdCss instance opened afterwards in this process.
 
         Returns the now current value of DVDCSS_METHOD, expected value should be
         the same as the mode string provided.
