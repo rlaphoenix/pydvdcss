@@ -5,25 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.5.0] - 2026-06-21
 
 This version is all about improving the UX and overhauling the tooling. Project management
 has moved from Poetry to uv with a Hatchling build backend, the supported Python versions
 are now 3.10 through 3.14, and all dependencies have been updated. The Sphinx documentation
-has been retired in favour of the README.
+has been retired in favour of the README. The Windows wheels now bundle libdvdcss, so it no
+longer needs to be installed separately there.
 
 ### Added
 
-- Implemented `libdvdcss.dvdcss_readv()` to `DvdCss.readv()`. Simply create buffers
-  using `create_string_buffer(b"", 2048)` and pass them as arguments. Read data will
-  go into the original buffers made. You can read the bytes from the `raw` property
-  of each string buffer.
+- Implemented `libdvdcss.dvdcss_readv()` as `DvdCss.readv()` for vectored reads into
+  multiple buffers in a single call. Create buffers with `create_string_buffer(b"", 2048)`
+  (each a non-zero multiple of a sector) and pass them as arguments; on success each is
+  filled with consecutive sectors, readable from its `raw` property. Pass
+  `flag=ReadFlag.READ_DECRYPT` to descramble VOB data as it is read.
+- A `py.typed` marker (PEP 561) so downstream type checkers use the inline type hints
+  shipped with the package.
+- `DvdCss`, the `SeekFlag` and `ReadFlag` enums, `DvdCssStreamCb`, and all exception
+  classes are now importable directly from the `pydvdcss` package root, e.g.
+  `from pydvdcss import DvdCss, SeekFlag, ReadError`.
+- The Windows wheels now **bundle** a precompiled `libdvdcss-2.dll` (© VideoLAN,
+  GPL-2.0-or-later, sourced and SHA-256-verified from allienx/libdvdcss-dll), so
+  `pip install pydvdcss` works out of the box on Windows. The pure wheel and source
+  distribution remain unbundled and rely on a system-installed libdvdcss. See
+  THIRD-PARTY-NOTICES.md for attribution and the GPL source offer.
 
 ### Fixed
 
+- The local library search now also finds a `.dylib` (macOS) next to the package, and
+  loads the actual matched file. Previously it only checked `.dll`/`.so` and then passed
+  the suffix-less path to `CDLL()`. It now also looks inside the package directory itself
+  (for the bundled DLL) before falling back to a system-installed library.
 - Various CI and linting tooling mistakes and made it more efficient.
-- `DvdCss.error()` (which is now `DvdCss.error` property) is now defined correctly and
-  now returns None or string values instead of a useless integer value.
+- `DvdCss.error` now returns None or string values instead of a useless integer value,
+  as the `dvdcss_error` binding was wrongly declared with an `int` return type.
+- `DvdCss.error` now decodes the libdvdcss error string with `errors="replace"`, so a
+  malformed (non-UTF-8) error message no longer raises `UnicodeDecodeError` and masks the
+  underlying failure.
 - The `pf_read` callback of `DvdCssStreamCb` now uses a `c_void_p` (writable address) buffer
   instead of `c_char_p`. ctypes hands a callback a `c_char_p` argument as immutable bytes, so the
   callback could not write the read data into the buffer. This was a blocker for `open_stream()`.
@@ -31,11 +50,13 @@ has been retired in favour of the README.
   `dvdcss_open_stream` C function takes a `dvdcss_stream_cb *`, but the struct was passed
   by value, so the callbacks were never reachable by libdvdcss. The docstring's note about
   this never working has been replaced with the actual requirement: `p_stream` must be non-zero.
-- Declared `typing-extensions` as a runtime dependency. The code imports it for `@deprecated`
-  but it was never listed, so a clean install could fail to import.
 
 ### Changed
 
+- `DvdCss.open_stream()` now validates `p_stream`, raising a `TypeError` if it isn't an
+  int and a `ValueError` if it is `0`, which libdvdcss rejects.
+- The type aliases module `pydvdcss.types` was renamed to `pydvdcss._types` to mark it
+  internal and to avoid shadowing the standard library `types` module.
 - Switched project management and the build backend from Poetry to uv with Hatchling.
 - Now supports Python 3.10 through 3.14 (previously 3.8 through 3.11).
 - Updated all dependencies, and switched development tooling (CI/CD, pre-commit) to uv.
@@ -55,6 +76,11 @@ has been retired in favour of the README.
 - `DvdCss.is_scrambled()` is now a property, via `@property` decorator.
 - `DvdCss.is_scrambled` will now return False if no DVD device or directory was opened yet.
 - `DvdCss.open()` changed parameter names from `psz_target` to `target`.
+- `DvdCss.open()` now also accepts any `os.PathLike` object (e.g. a `pathlib.Path`) for
+  `target`, not just a `str`.
+- `DvdCss.open()` now normalises a bare Windows drive root given with a trailing slash
+  (e.g. `"G:/"`) to `"G:"`, which libdvdcss otherwise rejects. Only the drive-root form
+  is touched; real file, ISO, and directory paths are left untouched.
 - `DvdCss.seek()` changed parameter names from `i_blocks` to `sector` and `i_flags` to
   `flag`.
 - `DvdCss.read()` changed parameter names from `i_blocks` to `sectors` and `i_flags` to
@@ -71,32 +97,23 @@ has been retired in favour of the README.
   if no DVD device or directory was opened yet.
 - `DvdCss.seek()` now raises a `SeekError` exception instead of returning negative
   numbers on seek failures.
-- `DvdCss.read()` now raises a `SeekError` exception instead of a negative integer when
-  it fails to seek.
 - `DvdCss.read()` now raises a `ReadError` exception instead of an `IOError` on failure
   to read one or more sectors.
 - `DvdCss.close()` now raises a `CloseError` exception instead of a `ValueError` on
   failure to close an open device or directory.
-- `DvdCss.dispose()` is now deprecated and an alias of `DvdCss.close()` and no longer
-  unsets the verbosity level or cracking mode environment variables. This is because
-  it cant actually work (see Removed section), and even if it did it is set in your
-  environment, not per-instance. Its not logical to reset it when it will affect every
-  other instance running.
 - The list of possible library names were put into constants as `LIBRARY_NAMES`.
 
 ### Removed
 
+- The `DvdCss.dispose()` method. Use `DvdCss.close()` instead. It only differed from
+  `close()` by also resetting the `DVDCSS_VERBOSE` and `DVDCSS_METHOD` environment
+  variables, which is undesirable as those are process-global, not per-instance.
 - The Sphinx documentation system and Read the Docs configuration. The relevant information
   (installation, features, and a usage example) now lives in the README.
 - The DeepSource configuration.
 - The `SECTOR_SIZE`, `BLOCK_BUFFER`, `NO_FLAGS`, `READ_DECRYPT`, `SEEK_MPEG`,
   `SEEK_KEY`, `flags_m`, and `flags_s` class variables were removed. The variables to
   do with flags/read/seek were refactored as SeekFlag and ReadFlag.
-- The `DvdCss.set_verbosity()` and `DvdCss.set_cracking_mode()` methods as it is not
-  actually possible to set the environment variable from Python in such a way for the
-  library to see the changes. I've tried manipulating os.environ, setx, py-setenv, and
-  pycrosskit. Nothing set it persistently for the current terminal/shell in such a way
-  without needing the terminal/shell to reload, making this method pointless.
 
 ## [1.4.0] - 2023-10-12
 
@@ -251,6 +268,7 @@ has been retired in favour of the README.
 
 Initial release.
 
+[1.5.0]: https://github.com/homemediadb/pydvdcss/releases/tag/v1.5.0
 [1.4.0]: https://github.com/homemediadb/pydvdcss/releases/tag/v1.4.0
 [1.3.2]: https://github.com/homemediadb/pydvdcss/releases/tag/v1.3.2
 [1.3.1]: https://github.com/homemediadb/pydvdcss/releases/tag/v1.3.1

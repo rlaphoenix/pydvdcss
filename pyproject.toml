@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pydvdcss"
-version = "1.4.0"
+version = "1.5.0"
 description = "Python wrapper for VideoLAN's libdvdcss."
 authors = [{ name = "rlaphoenix", email = "rlaphoenix@pm.me" }]
 requires-python = ">=3.10"
